@@ -4,7 +4,6 @@
 [![Vim: 8.2+](https://img.shields.io/badge/Vim-8.2%2B-green.svg?logo=vim)](https://www.vim.org/)
 [![Neovim: 0.10+](https://img.shields.io/badge/Neovim-0.10%2B-57A143.svg?logo=neovim)](https://neovim.io/)
 [![Theme: TokyoNight](https://img.shields.io/badge/Theme-TokyoNight%20Storm-7aa2f7.svg)](https://github.com/folke/tokyonight.nvim)
-[![Maintained by: Gradient Geeks](https://img.shields.io/badge/Maintained%20by-Gradient%20Geeks-00e5ff.svg)](https://gradientgeeks.com)
 
 A meticulously tuned developer configuration providing **100% aesthetic and keybinding symmetry** between classic **Vim** and modern **Neovim (LazyVim)**. Built for systems programming (Rust, Go, C++, Python, TypeScript).
 

@@ -41,7 +41,6 @@ print_banner() {
     echo " \__/ |___ |  \ |___ /~~\ .__/    "
     echo -e "${RESET}"
     echo -e "${BOLD}High-Performance Vim & Neovim Configurations${RESET}"
-    echo -e "Maintained by ${CYAN}Uttam Mahata${RESET} (@gradientgeeks)"
     echo "--------------------------------------------------------"
 }
 
