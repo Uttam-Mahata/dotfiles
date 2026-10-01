@@ -1,0 +1,19 @@
+# Swap and temporary files
+*.swp
+*.swo
+*~
+*.bak
+
+# Undo directories
+undodir/
+.undodir/
+
+# Plugged plugins (downloaded by vim-plug / lazy.nvim)
+plugged/
+.plugged/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
