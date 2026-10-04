@@ -82,6 +82,12 @@ nnoremap <C-l> <C-w>l
 nnoremap <leader>= <C-w>=       " equalize split sizes
 nnoremap <leader>sc :close<CR>
 
+" Resize window / sidebar using Ctrl + Arrow keys (LazyVim parity)
+nnoremap <silent> <C-Up> :resize +2<CR>
+nnoremap <silent> <C-Down> :resize -2<CR>
+nnoremap <silent> <C-Left> :vertical resize -2<CR>
+nnoremap <silent> <C-Right> :vertical resize +2<CR>
+
 " ============================================================
 " Buffers and tabs
 " ============================================================
@@ -251,7 +257,7 @@ set splitright splitbelow
 set nocursorline
 set list listchars=tab:>\ ,trail:.,nbsp:+
 set fillchars=vert:\|
-set timeoutlen=400             " leader-key hints appear quickly, as in LazyVim
+set timeoutlen=500             " 500ms timeout for multi-key mappings & which-key
 let g:tokyonight_style = 'storm'
 let g:tokyonight_enable_italic = 1
 silent! colorscheme tokyonight
@@ -263,21 +269,22 @@ let g:gitgutter_map_keys = 0
 " <Esc> clears search highlight (LazyVim)
 nnoremap <silent> <Esc> :nohlsearch<CR><Esc>
 
-" Telescope-style finders (LazyVim: <leader>ff, <leader>fg, <leader>fb, <leader>fr, <leader>fh)
-nnoremap <leader>ff :Files<CR>
-nnoremap <leader><space> :Files<CR>
-nnoremap <leader>fg :Rg<CR>
-nnoremap <leader>/ :Rg<CR>
-nnoremap <leader>fb :Buffers<CR>
-nnoremap <leader>, :Buffers<CR>
-nnoremap <leader>fr :History<CR>
-nnoremap <leader>fh :Helptags<CR>
-nnoremap <leader>fc :Commands<CR>
-nnoremap <leader>fk :Maps<CR>
-nnoremap <leader>gc :Commits<CR>
-nnoremap <leader>gs :Git<CR>
-nnoremap <leader>gd :Gdiffsplit<CR>
-nnoremap <leader>gb :Git blame<CR>
+" Telescope-style finders (LazyVim: <leader><leader>, <leader><space>, <leader>ff, <leader>fg, etc.)
+nnoremap <silent> <leader><leader> :Files<CR>
+nnoremap <silent> <leader><space> :Files<CR>
+nnoremap <silent> <leader>ff :Files<CR>
+nnoremap <silent> <leader>fg :Rg<CR>
+nnoremap <silent> <leader>/ :Rg<CR>
+nnoremap <silent> <leader>fb :Buffers<CR>
+nnoremap <silent> <leader>, :Buffers<CR>
+nnoremap <silent> <leader>fr :History<CR>
+nnoremap <silent> <leader>fh :Helptags<CR>
+nnoremap <silent> <leader>fc :Commands<CR>
+nnoremap <silent> <leader>fk :Maps<CR>
+nnoremap <silent> <leader>gc :Commits<CR>
+nnoremap <silent> <leader>gs :Git<CR>
+nnoremap <silent> <leader>gd :Gdiffsplit<CR>
+nnoremap <silent> <leader>gb :Git blame<CR>
 " file explorer (LazyVim: <leader>e)
 nnoremap <leader>e :Lexplore<CR>
 let g:netrw_banner = 0
@@ -290,8 +297,22 @@ nnoremap <S-l> :bnext<CR>
 nmap ]h <Plug>(GitGutterNextHunk)
 nmap [h <Plug>(GitGutterPrevHunk)
 nmap <leader>gh <Plug>(GitGutterPreviewHunk)
-" which-key
-nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+
+" which-key configuration & dictionary registrations
+let g:which_key_map = {}
+let g:which_key_map[' '] = [':Files', 'find files']
+let g:which_key_map['w'] = [':w', 'save file']
+let g:which_key_map['q'] = [':q', 'quit window']
+let g:which_key_map['x'] = [':x', 'save & quit']
+let g:which_key_map['c'] = [':bdelete', 'close buffer']
+let g:which_key_map['C'] = [':bdelete!', 'force close buffer']
+let g:which_key_map['e'] = [':Lexplore', 'file explorer']
+let g:which_key_map['/'] = [':Rg', 'grep text']
+let g:which_key_map['='] = ['<C-w>=', 'balance splits']
+
+call which_key#register('<Space>', "g:which_key_map")
+nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
+vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
 " restore cursor position when reopening a file (LazyVim)
 augroup restore_cursor
   autocmd!
