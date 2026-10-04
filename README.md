@@ -63,11 +63,16 @@ Leader key is set to `<Space>` (`let mapleader = " "`):
 ### File & Buffer Management
 | Keybinding | Action |
 |---|---|
+| `<leader>c` or `<leader>bd` | **Close / Delete current file buffer** (`Snacks.bufdelete` / `:bdelete`) |
+| `<leader>C` | Force close buffer without saving (`:bdelete!`) |
+| `<leader>bo` | Delete all other open buffers |
+| `<leader>bn` / `]b` / `<S-l>` | Next buffer tab (`:bnext`) |
+| `<leader>bp` / `[b` / `<S-h>` | Previous buffer tab (`:bprevious`) |
 | `<leader>w` | Save current file (`:w`) |
 | `<leader>q` | Quit current window (`:q`) |
 | `<leader>x` | Save and quit (`:x`) |
 | `<leader>Q` | Force quit all (`:qa!`) |
-| `<leader>/` | Clear search highlighting (`:nohlsearch`) |
+| `<Esc>` or `<leader>/` | Clear search highlighting (`:nohlsearch`) |
 
 ### Splits & Window Navigation
 | Keybinding | Action |

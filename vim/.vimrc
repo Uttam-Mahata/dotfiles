@@ -14,6 +14,10 @@ Plug 'christoomey/vim-tmux-navigator'             " <C-h/j/k/l> across vim and t
 Plug 'airblade/vim-gitgutter'                     " git signs in the gutter
 Plug 'vim-airline/vim-airline'                    " statusline (lualine equivalent)
 Plug 'liuchengxu/vim-which-key'                   " leader-key hints (which-key equivalent)
+Plug 'tpope/vim-repeat'                           " enable '.' repeat for surround & commentary
+Plug 'tpope/vim-rhubarb'                          " GitHub extension for fugitive (:GBrowse)
+Plug 'sheerun/vim-polyglot'                       " modern syntax highlighting for 100+ languages
+Plug 'Yggdroot/indentLine'                        " vertical indentation guides
 call plug#end()
 
 " ============================================================
@@ -81,9 +85,11 @@ nnoremap <leader>sc :close<CR>
 " ============================================================
 " Buffers and tabs
 " ============================================================
+nnoremap <leader>c :bdelete<CR>
+nnoremap <leader>C :bdelete!<CR>
+nnoremap <leader>bd :bdelete<CR>
 nnoremap <leader>bn :bnext<CR>
 nnoremap <leader>bp :bprevious<CR>
-nnoremap <leader>bd :bdelete<CR>
 nnoremap <leader>tn :tabnew<CR>
 nnoremap <leader>tc :tabclose<CR>
 nnoremap <leader>to :tabonly<CR>
@@ -157,7 +163,22 @@ tnoremap <C-l> <C-\><C-n><C-w>l
 " ============================================================
 " coc.nvim — VS Code-style autocomplete / LSP
 " ============================================================
-let g:coc_global_extensions = ['coc-json', 'coc-snippets', 'coc-java']
+let g:coc_global_extensions = [
+    \ 'coc-json',
+    \ 'coc-snippets',
+    \ 'coc-java',
+    \ 'coc-go',
+    \ 'coc-rust-analyzer',
+    \ 'coc-tsserver',
+    \ 'coc-html',
+    \ 'coc-css',
+    \ 'coc-yaml',
+    \ 'coc-markdownlint'
+    \ ]
+
+" IndentLine configuration
+let g:indentLine_char = '│'
+let g:indentLine_fileTypeExclude = ['help', 'netrw', 'coc-explorer']
 
 set updatetime=300
 set shortmess+=c

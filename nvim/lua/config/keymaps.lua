@@ -28,8 +28,14 @@ map("n", "<leader>sc", "<cmd>close<cr>", { desc = "Close split" })
 map("n", "<leader>=", "<C-w>=", { desc = "Equalize splits" })
 
 -- Buffers and tabs
+map("n", "<leader>c", function() Snacks.bufdelete() end, { desc = "Close file buffer" })
+map("n", "<leader>C", function() Snacks.bufdelete({ force = true }) end, { desc = "Force close buffer" })
+map("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete buffer" })
+map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete other buffers" })
 map("n", "<leader>bn", "<cmd>bnext<cr>", { desc = "Next buffer" })
 map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "Previous buffer" })
+map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
+map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next buffer" })
 map("n", "<leader>tn", "<cmd>tabnew<cr>", { desc = "New tab" })
 map("n", "<leader>tc", "<cmd>tabclose<cr>", { desc = "Close tab" })
 map("n", "<leader>to", "<cmd>tabonly<cr>", { desc = "Only this tab" })
@@ -51,6 +57,10 @@ map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "<PageDown>", "<C-d>zz")
 map("n", "<PageUp>", "<C-u>zz")
+
+-- Clear search highlight with <Esc> or <leader>/
+map("n", "<Esc>", "<cmd>nohlsearch<cr><Esc>", { desc = "Clear search highlight" })
+map("n", "<leader>/", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 
 -- Toggles
 map("n", "<leader>n", "<cmd>set relativenumber!<cr>", { desc = "Toggle relative number" })
