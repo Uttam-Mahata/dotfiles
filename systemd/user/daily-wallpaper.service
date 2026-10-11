@@ -1,0 +1,7 @@
+[Unit]
+Description=Daily Wallpaper Rotator for Hyprland
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/daily-wallpaper daily

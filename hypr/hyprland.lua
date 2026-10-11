@@ -338,6 +338,7 @@ hl.on("monitor.removed", function() hl.exec_cmd(monitorSync) end)
 
 -- Desktop services: wallpaper, idle/lock, clipboard history
 hl.on("hyprland.start", function ()
+    hl.exec_cmd(os.getenv("HOME") .. "/.local/bin/daily-wallpaper daily")
     hl.exec_cmd("hyprpaper")
     hl.exec_cmd("hypridle")
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
@@ -376,6 +377,7 @@ hl.bind("CTRL + Print",             hl.dsp.exec_cmd([[g=$(slurp) && grim -g "$g"
 -- Clipboard history (cliphist + wofi), colour picker, lock
 hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd([[cliphist list | wofi --dmenu --cache-file /dev/null -p "Clipboard" | cliphist decode | wl-copy]]))
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.exec_cmd("hyprpicker --autocopy"))
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.local/bin/daily-wallpaper next"))
 hl.bind(mainMod .. " + Escape",    hl.dsp.exec_cmd("loginctl lock-session")) -- hypridle runs hyprlock
 
 -- Move focus with mainMod + arrow keys

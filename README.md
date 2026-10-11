@@ -128,6 +128,7 @@ Apply the theme system-wide (requires sudo):
 | `SUPER + M` | Exit / Power menu |
 | `SUPER + SHIFT + V` | Clipboard history search (`cliphist` + Wofi) |
 | `SUPER + SHIFT + C` | Color picker (`hyprpicker --autocopy`) |
+| `SUPER + SHIFT + W` | **Next Wallpaper** (Rotate wallpaper immediately) |
 
 ### Window & Layout Management
 | Shortcut | Action |

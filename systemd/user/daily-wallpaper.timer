@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily Wallpaper Rotation Timer
+Documentation=https://github.com/Uttam-Mahata/dotfiles
+
+[Timer]
+OnCalendar=*-*-* 00:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""
+Daily Wallpaper Rotator for Hyprland (hyprpaper)
+Rotates automatically on a daily basis through all wallpapers in ~/Pictures/Wallpapers.
+Author: Uttam Mahata
+"""
+
+import sys
+import os
+import glob
+import json
+import datetime
+import random
+import subprocess
+
+WALLPAPERS_DIR = os.path.expanduser("~/Pictures/Wallpapers")
+STATE_DIR = os.path.expanduser("~/.local/state/wallpaper")
+STATE_FILE = os.path.join(STATE_DIR, "state.json")
+CURRENT_LINK = os.path.join(WALLPAPERS_DIR, "current.jpg")
+
+
+def get_available_wallpapers():
+    """Returns sorted list of all valid image files in WALLPAPERS_DIR."""
+    extensions = ("*.jpg", "*.jpeg", "*.png")
+    all_files = []
+    for ext in extensions:
+        all_files.extend(glob.glob(os.path.join(WALLPAPERS_DIR, ext)))
+    # Exclude symlinks (like current.jpg) and backup files
+    return sorted([
+        f for f in all_files
+        if not os.path.islink(f) and ".bak." not in os.path.basename(f)
+    ])
+
+
+def load_state(wallpapers):
+    """Loads state.json, initializing or updating the playlist if files changed."""
+    os.makedirs(STATE_DIR, exist_ok=True)
+    state = {}
+    if os.path.exists(STATE_FILE):
+        try:
+            with open(STATE_FILE, "r") as f:
+                state = json.load(f)
+        except Exception:
+            state = {}
+
+    playlist = state.get("playlist", [])
+    # Verify that existing playlist has the exact same files
+    if set(playlist) != set(wallpapers) or not playlist:
+        # Shuffle existing wallpapers for an organic rotation
+        shuffled = list(wallpapers)
+        random.seed(42)  # Consistent base shuffle
+        random.shuffle(shuffled)
+        state["playlist"] = shuffled
+        state["current_index"] = 0
+        state["last_date"] = ""
+
+    return state
+
+
+def save_state(state):
+    """Saves the rotation state to disk."""
+    with open(STATE_FILE, "w") as f:
+        json.dump(state, f, indent=2)
+
+
+def apply_wallpaper(image_path, notify=True):
+    """Applies the wallpaper live via hyprpaper and updates current.jpg symlink."""
+    if not os.path.isfile(image_path):
+        print(f"Error: image not found: {image_path}", file=sys.stderr)
+        return False
+
+    # 1. Update current.jpg symlink
+    try:
+        if os.path.lexists(CURRENT_LINK):
+            os.remove(CURRENT_LINK)
+        os.symlink(image_path, CURRENT_LINK)
+    except Exception as e:
+        print(f"Warning: could not update symlink {CURRENT_LINK}: {e}", file=sys.stderr)
+
+    # 2. Live apply via hyprpaper
+    try:
+        subprocess.run(
+            ["hyprctl", "hyprpaper", "wallpaper", f",{image_path},cover"],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+    except Exception as e:
+        # Hyprpaper might not be running right now (e.g. executed from background timer before login)
+        pass
+
+    # 3. Notification
+    if notify:
+        name = os.path.basename(image_path)
+        try:
+            subprocess.run([
+                "notify-send",
+                "-t", "3000",
+                "-a", "Daily Wallpaper",
+                "-i", image_path,
+                "Wallpaper Rotated",
+                f"{name}"
+            ], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception:
+            pass
+
+    return True
+
+
+def main():
+    wallpapers = get_available_wallpapers()
+    if not wallpapers:
+        print(f"No wallpapers found in {WALLPAPERS_DIR}", file=sys.stderr)
+        sys.exit(1)
+
+    state = load_state(wallpapers)
+    playlist = state["playlist"]
+    total = len(playlist)
+    current_index = state.get("current_index", 0)
+    last_date = state.get("last_date", "")
+    today = datetime.date.today().isoformat()
+
+    action = sys.argv[1].lower() if len(sys.argv) > 1 else "daily"
+
+    if action in ("--help", "-h", "help"):
+        print("Usage: daily-wallpaper [COMMAND]")
+        print("")
+        print("Commands:")
+        print("  daily     Rotate wallpaper if not rotated today (Default)")
+        print("  next      Force advance to next wallpaper")
+        print("  prev      Move back to previous wallpaper")
+        print("  random    Pick a random wallpaper")
+        print("  status    Show current active wallpaper details")
+        print("  list      List all wallpapers in the current rotation")
+        return
+
+    if action == "status":
+        curr = playlist[current_index % total]
+        print(f"Active Wallpaper: {os.path.basename(curr)}")
+        print(f"Path:             {curr}")
+        print(f"Index:            {current_index + 1} of {total}")
+        print(f"Last Date:        {last_date or 'None'}")
+        return
+
+    if action == "list":
+        for idx, p in enumerate(playlist, start=1):
+            marker = "●" if idx - 1 == current_index % total else " "
+            print(f" {marker} [{idx:02d}/{total:02d}] {os.path.basename(p)}")
+        return
+
+    if action == "next":
+        current_index = (current_index + 1) % total
+        state["last_date"] = today
+    elif action == "prev":
+        current_index = (current_index - 1) % total
+    elif action == "random":
+        current_index = random.randint(0, total - 1)
+        state["last_date"] = today
+    elif action in ("daily", "check"):
+        if last_date == today:
+            # Already rotated today, ensure it's applied
+            selected = playlist[current_index % total]
+            apply_wallpaper(selected, notify=False)
+            print(f"Today's wallpaper already active: {os.path.basename(selected)}")
+            return
+        else:
+            # New day: advance rotation
+            current_index = (current_index + 1) % total
+            state["last_date"] = today
+    else:
+        print(f"Unknown command: {action}. Use --help for usage.", file=sys.stderr)
+        sys.exit(1)
+
+    state["current_index"] = current_index
+    selected = playlist[current_index % total]
+    save_state(state)
+
+    if apply_wallpaper(selected, notify=True):
+        print(f"Applied [{current_index + 1}/{total}]: {os.path.basename(selected)}")
+
+
+if __name__ == "__main__":
+    main()

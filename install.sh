@@ -185,7 +185,20 @@ setup_scripts() {
     install_entry "$DOTFILES_DIR/scripts/new-workspace" "$HOME/.local/bin/new-workspace"
     chmod +x "$HOME/.local/bin/new-workspace" 2>/dev/null || true
 
-    log_success "Desktop scripts installed to ~/.local/bin."
+    install_entry "$DOTFILES_DIR/scripts/daily-wallpaper" "$HOME/.local/bin/daily-wallpaper"
+    chmod +x "$HOME/.local/bin/daily-wallpaper" 2>/dev/null || true
+
+    if [ -d "$DOTFILES_DIR/systemd/user" ]; then
+        mkdir -p "$HOME/.config/systemd/user"
+        install_entry "$DOTFILES_DIR/systemd/user/daily-wallpaper.service" "$HOME/.config/systemd/user/daily-wallpaper.service"
+        install_entry "$DOTFILES_DIR/systemd/user/daily-wallpaper.timer" "$HOME/.config/systemd/user/daily-wallpaper.timer"
+        if command -v systemctl >/dev/null 2>&1; then
+            systemctl --user daemon-reload 2>/dev/null || true
+            systemctl --user enable --now daily-wallpaper.timer 2>/dev/null || true
+        fi
+    fi
+
+    log_success "Desktop scripts installed to ~/.local/bin and daily-wallpaper timer enabled."
 }
 
 setup_wallpapers() {
