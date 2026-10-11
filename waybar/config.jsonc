@@ -1,0 +1,94 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 28,
+  "spacing": 0,
+  "margin-top": 0,
+  "margin-left": 14,
+  "margin-right": 8,
+  "reload_style_on_change": true,
+
+  "modules-left": ["group/launch", "hyprland/window"],
+  "modules-center": ["clock"],
+  "modules-right": ["group/status"],
+
+  "group/launch": {
+    "orientation": "horizontal",
+    "modules": ["custom/arch", "hyprland/workspaces"]
+  },
+
+  "group/status": {
+    "orientation": "horizontal",
+    "modules": ["custom/wg", "custom/tailscale", "network", "battery", "custom/power"]
+  },
+
+  "custom/arch": {
+    "format": "󰣇",
+    "tooltip": false,
+    "on-click": "wofi --show drun"
+  },
+
+  "hyprland/workspaces": {
+    "format": "{id}",
+    "persistent-workspaces": { "eDP-1": [1, 2, 3, 4, 5], "HDMI-A-1": [6, 7, 8, 9, 10] },
+    "all-outputs": false,
+    "on-click": "activate",
+    "on-scroll-up": "hyprctl dispatch workspace e-1",
+    "on-scroll-down": "hyprctl dispatch workspace e+1"
+  },
+
+  "hyprland/window": {
+    "format": "{title}",
+    "icon": true,
+    "icon-size": 20,
+    "max-length": 48,
+    "separate-outputs": true,
+    "rewrite": { "^\\s*$": "" }
+  },
+
+  "clock": {
+    "format": "󰥔  {0:%H:%M}  {0:%a %d %b}",
+    "tooltip-format": "<tt>{calendar}</tt>"
+  },
+
+  "custom/wg": {
+    "exec": "~/.config/waybar/scripts/wg.sh",
+    "return-type": "json",
+    "interval": 5,
+    "on-click": "~/.config/waybar/scripts/wg.sh toggle"
+  },
+
+  "custom/tailscale": {
+    "exec": "~/.config/waybar/scripts/tailscale-exit.sh",
+    "return-type": "json",
+    "interval": 5,
+    "signal": 9,
+    "on-click": "~/.config/waybar/scripts/tailscale-exit.sh menu",
+    "on-click-right": "~/.config/waybar/scripts/tailscale-exit.sh toggle"
+  },
+
+  "network": {
+    "format-wifi": "{icon}",
+    "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤭",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}",
+    "on-click": "kitty -e nmtui"
+  },
+
+  "custom/power": {
+    "format": "󰐥",
+    "tooltip-format": "Power menu",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/power-menu.sh"
+  },
+
+  "battery": {
+    "bat": "BAT1",
+    "states": { "warning": 25, "critical": 10 },
+    "format": "{icon}  {capacity}%",
+    "format-charging": "󱐋  {capacity}%",
+    "format-plugged": "󰚥  {capacity}%",
+    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰁹"]
+  }
+}

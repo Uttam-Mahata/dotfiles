@@ -1,134 +1,173 @@
-# ⚡ High-Performance Vim & Neovim Dotfiles
+# ❄️ Arch Linux • Hyprland • Waybar • SDDM • Neovim Dotfiles
 
+[![Arch Linux](https://img.shields.io/badge/Arch%20Linux-1793d1?logo=archlinux&logoColor=white)](https://archlinux.org/)
+[![Hyprland](https://img.shields.io/badge/Hyprland-0.56%2B%20(Lua)-00c0ff?logo=wayland&logoColor=white)](https://hyprland.org/)
+[![Waybar](https://img.shields.io/badge/Waybar-0.10%2B-ffffff?logo=wayland&logoColor=black)](https://github.com/Alexays/Waybar)
+[![SDDM](https://img.shields.io/badge/SDDM-Qt6%20Arch%20Slate-1793d1)](https://github.com/sddm/sddm)
+[![Neovim](https://img.shields.io/badge/Neovim-0.10%2B%20(LazyVim)-57A143.svg?logo=neovim)](https://neovim.io/)
+[![Kitty](https://img.shields.io/badge/Kitty-GPU%20Terminal-20262c?logo=kitty)](https://sw.kovidgoyal.net/kitty/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
-[![Vim: 8.2+](https://img.shields.io/badge/Vim-8.2%2B-green.svg?logo=vim)](https://www.vim.org/)
-[![Neovim: 0.10+](https://img.shields.io/badge/Neovim-0.10%2B-57A143.svg?logo=neovim)](https://neovim.io/)
-[![Theme: TokyoNight](https://img.shields.io/badge/Theme-TokyoNight%20Storm-7aa2f7.svg)](https://github.com/folke/tokyonight.nvim)
 
-A meticulously tuned developer configuration providing **100% aesthetic and keybinding symmetry** between classic **Vim** and modern **Neovim (LazyVim)**. Built for systems programming (Rust, Go, C++, Python, TypeScript).
+A complete, production-grade personal dotfiles ecosystem configured from scratch around the **Arch Linux aesthetic palette** (`#1793d1` / `#222222`) and **TokyoNight Storm**. Engineered for seamless multi-monitor development, frosted glass blur consistency, and ultra-fast keyboard-driven productivity.
 
 ---
 
-## 🌟 Highlights
+## 🎨 Unified Blur & Aesthetic Architecture
 
-| Feature | Classic Vim (`~/.vimrc`) | Neovim (`~/.config/nvim`) |
-|---|---|---|
-| **Theme** | TokyoNight (storm) | TokyoNight (storm) |
-| **Completion / LSP** | [coc.nvim](https://github.com/neoclide/coc.nvim) (VS Code-grade engine) | [Mason](https://github.com/williamboman/mason.nvim) + Native LSP |
-| **Fuzzy Finder** | [FZF.vim](https://github.com/junegunn/fzf.vim) (`:Files`, `:Rg`, `:Buffers`) | [Telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) |
-| **Git Integration** | [vim-fugitive](https://github.com/tpope/vim-fugitive) + [vim-gitgutter](https://github.com/airblade/vim-gitgutter) | [Neogit](https://github.com/NeogitOrg/neogit) + [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim) |
-| **Key Hints** | [vim-which-key](https://github.com/liuchengxu/vim-which-key) | [which-key.nvim](https://github.com/folke/which-key.nvim) |
-| **Statusline** | [vim-airline](https://github.com/vim-airline/vim-airline) | [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) |
-| **Multiplexer** | [vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) (`<C-h/j/k/l>`) | `vim-tmux-navigator` |
-| **Formatting** | 4-space indentation, smartindent, persistent undo | 4-space indentation, smartindent, persistent undo |
-| **Clipboard** | System clipboard integration (`unnamedplus`) | System clipboard integration (`unnamedplus`) |
+Every desktop component is calibrated for visual coherence and legibility:
+
+| Component | Visual Styling & Blur Implementation |
+|---|---|
+| **Hyprland** | Native Lua (`hyprland.lua`), rounded corners (10px), subtle borders (`#1793d1`), dynamic dwindle layout, and compositor blur. |
+| **Waybar** | Top bar with flat high-contrast typography (Adwaita & Noto Sans), Arch blue `#1793d1` active indicators, and blurred wallpaper backdrop (`waybar-blur` layer rule). |
+| **Hyprlock** | Frosted glass lockscreen with 3 blur passes, 7 blur size, live clock & date, `$USER@archlinux` banner, and Arch gradient input box. |
+| **SDDM Login** | Custom **Arch Slate** QtQuick 6 greeter with matching Fuji night backdrop, live clock/date, Arch logo, and smooth authentication feedback. |
+| **Kitty Terminal** | GPU-accelerated terminal with `background_opacity 0.35` and `background_blur 32`, TokyoNight palette, and split navigation. |
+| **Wofi** | Translucent rounded Spotlight launcher (`#outer-box` `rgba(26,27,38,0.62)`) with subtle Arch blue border and compositor layer blur (`popin 92%`). |
+| **Neovim** | LazyVim with transparent TokyoNight background integration (`<leader>uT` live toggle) and blended popups (`winblend = 10`, `pumblend = 10`). |
 
 ---
 
-## 🚀 Quick Install (1-Line Setup)
+## 📂 Repository Structure
 
-Run the automated installer directly in your terminal:
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/Uttam-Mahata/dotfiles/main/install.sh)
+```
+~/projects/dotfiles/
+├── install.sh                  # Comprehensive modular installer (symlinks & backups)
+├── hypr/
+│   ├── hyprland.lua            # Hyprland native Lua config (monitors, keybinds, rules)
+│   ├── hyprlock.conf           # Arch Linux themed frosted lockscreen
+│   ├── hypridle.conf           # Idle daemon (dim -> lock -> dpms off -> suspend)
+│   ├── hyprpaper.conf          # Wallpaper daemon configuration
+│   └── scripts/
+│       └── monitor-sync.sh     # Hotplug monitor & workspace rebalancing
+├── waybar/
+│   ├── config.jsonc            # Bar layout, modules, and persistent workspaces
+│   ├── style.css               # Clean typography and Arch blue accents
+│   └── scripts/
+│       ├── power-menu.sh       # Interactive Wofi power & logout confirmation menu
+│       ├── tailscale-exit.sh   # Tailscale exit node picker & toggle
+│       └── wg.sh               # WireGuard VPN quick toggle & status
+├── wofi/
+│   ├── config                  # Spotlight search configuration
+│   └── style.css               # Frosted translucent theme
+├── kitty/
+│   └── kitty.conf              # 35% opacity + blur, font ligatures, splits & tabs
+├── sddm/
+│   └── themes/arch-slate/      # Custom QtQuick SDDM theme
+│       ├── Main.qml
+│       ├── theme.conf
+│       ├── metadata.desktop
+│       ├── archlinux-logo.png
+│       └── background.jpg
+├── scripts/
+│   ├── display-mode            # Switch between extend / mirror / external / laptop
+│   ├── new-workspace           # Smart empty workspace creator on focused screen
+│   ├── install-sddm.sh         # System installer for SDDM theme (sudo)
+│   └── test-sddm.sh            # In-window SDDM theme tester
+├── wallpapers/
+│   ├── fuji-night-1080p.jpg    # Primary desktop & lockscreen wallpaper
+│   └── ...                     # Programming & cheatsheet wallpapers
+├── nvim/                       # Production LazyVim setup with transparent toggle
+└── vim/                        # Classic Vimrc + coc.nvim
 ```
 
-The script will:
-1. Automatically back up any existing `~/.vimrc` and `~/.config/nvim`.
-2. Install `vim-plug` and configure `~/.vimrc` and `~/.vim/coc-settings.json`.
-3. Headlessly download and compile all Vim plugins.
-4. Set up the modular LazyVim configuration in `~/.config/nvim`.
-
 ---
 
-## 🛠 Manual Installation
+## 🚀 Installation & Quickstart
+
+Clone this repository and run the automated installer:
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/Uttam-Mahata/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
+git clone https://github.com/Uttam-Mahata/dotfiles.git ~/projects/dotfiles
+cd ~/projects/dotfiles
+chmod +x install.sh
+```
 
-# 2. Choose your setup:
-./install.sh --all     # Set up both Vim and Neovim
-./install.sh --vim     # Set up classic Vim only
-./install.sh --nvim    # Set up Neovim (LazyVim) only
+### Full Setup (Desktop + Neovim + Vim)
+```bash
+./install.sh --all
+```
+
+> **Note:** By default, `install.sh` uses **symlinks** (`--link`) so that any adjustments made inside `~/projects/dotfiles` take effect immediately. Existing configuration files are automatically backed up with timestamps (`*.bak.YYYYMMDD_HHMMSS`).
+
+### Modular Installation
+```bash
+./install.sh --desktop      # All desktop tools (Hyprland, Waybar, Kitty, Wofi, Scripts, Wallpapers)
+./install.sh --hypr         # Hyprland, Hyprlock, Hypridle, Hyprpaper
+./install.sh --waybar       # Waybar configuration & helper scripts
+./install.sh --kitty        # Kitty terminal configuration
+./install.sh --wofi         # Wofi application launcher
+./install.sh --scripts      # Helper utilities (display-mode, new-workspace) to ~/.local/bin
+./install.sh --wallpapers   # Wallpapers to ~/Pictures/Wallpapers
+./install.sh --nvim         # Neovim (LazyVim) suite
+./install.sh --vim          # Classic Vim suite
+```
+
+### SDDM Theme Setup
+Preview the Arch Slate login screen in a test window:
+```bash
+./scripts/test-sddm.sh
+```
+
+Apply the theme system-wide (requires sudo):
+```bash
+./scripts/install-sddm.sh
 ```
 
 ---
 
-## ⌨️ Essential Keybindings Cheat Sheet
+## ⌨️ Desktop Shortcuts Reference
 
-Leader key is set to `<Space>` (`let mapleader = " "`):
-
-### File & Buffer Management
-| Keybinding | Action |
+### System & Launchers
+| Shortcut | Action |
 |---|---|
-| `<leader>c` or `<leader>bd` | **Close / Delete current file buffer** (`Snacks.bufdelete` / `:bdelete`) |
-| `<leader>C` | Force close buffer without saving (`:bdelete!`) |
-| `<leader>bo` | Delete all other open buffers |
-| `<leader>bn` / `]b` / `<S-l>` | Next buffer tab (`:bnext`) |
-| `<leader>bp` / `[b` / `<S-h>` | Previous buffer tab (`:bprevious`) |
-| `<leader>w` | Save current file (`:w`) |
-| `<leader>q` | Quit current window (`:q`) |
-| `<leader>x` | Save and quit (`:x`) |
-| `<leader>Q` | Force quit all (`:qa!`) |
-| `<Esc>` or `<leader>/` | Clear search highlighting (`:nohlsearch`) |
+| `SUPER + Q` | Launch Kitty terminal |
+| `SUPER + R` | Application launcher (Wofi drun) |
+| `SUPER + E` | Open Dolphin file manager |
+| `SUPER + Escape` | Lock session immediately (`hyprlock`) |
+| `SUPER + M` | Exit / Power menu |
+| `SUPER + SHIFT + V` | Clipboard history search (`cliphist` + Wofi) |
+| `SUPER + SHIFT + C` | Color picker (`hyprpicker --autocopy`) |
 
-### Splits & Window Navigation
-| Keybinding | Action |
+### Window & Layout Management
+| Shortcut | Action |
 |---|---|
-| `<leader>sv` | Vertical split (`:vsplit`) |
-| `<leader>sh` | Horizontal split (`:split`) |
-| `<leader>sc` | Close current split |
-| `<leader>=` | Equalize split dimensions (`<C-w>=`) |
-| `<C-h>`, `<C-j>`, `<C-k>`, `<C-l>` | Navigate splits and Tmux panes seamlessly |
+| `SUPER + C` | Close focused window |
+| `SUPER + V` | Toggle floating state |
+| `SUPER + P` | Toggle pseudo-tile |
+| `SUPER + J` | Toggle dwindle split orientation |
+| `SUPER + Left/Right/Up/Down` | Move focus in direction |
+| `SUPER + LMB (drag)` | Move window |
+| `SUPER + RMB (drag)` | Resize window |
 
-### Navigation & Search (FZF / Telescope)
-| Keybinding | Action |
+### Multi-Monitor & Displays
+| Shortcut | Action |
 |---|---|
-| `<C-p>` or `<leader>ff` | Fuzzy find files in project |
-| `<leader>fg` | Live grep project text (ripgrep) |
-| `<leader>fb` | Switch active buffers |
-| `<leader>fh` | Search command history |
+| `SUPER + SHIFT + P` | **Display mode picker** (Extend / Mirror / External Only / Laptop Only) |
+| `SUPER + ,` / `SUPER + .` | Focus previous / next monitor |
+| `SUPER + SHIFT + ,` / `.` | Move active window to other monitor |
+| `SUPER + ALT + ,` / `.` | Move active workspace to other monitor |
+| `SUPER + N` | Open **new empty workspace** on focused monitor |
+| `SUPER + 1..5` | Workspaces 1–5 (Laptop panel `eDP-1`) |
+| `SUPER + 6..0` | Workspaces 6–10 (External monitor `HDMI-A-1`) |
+| `SUPER + S` | Toggle special scratchpad workspace |
 
-### Code & LSP Navigation (CoC / Mason)
-| Keybinding | Action |
+### Screenshots (grim + slurp)
+| Shortcut | Action |
 |---|---|
-| `gd` | Go to Definition |
-| `gy` | Go to Type Definition |
-| `gi` | Go to Implementation |
-| `gr` | Find References |
-| `K` | Hover Documentation / Type Info |
-| `<leader>rn` | Rename symbol across project |
-| `[g` / `]g` | Jump to previous / next diagnostic error |
-| `<Tab>` / `<S-Tab>` | Navigate completion dropdown |
-| `<CR>` | Confirm completion selection |
-
-### Git Commands
-| Keybinding | Action |
-|---|---|
-| `<leader>gs` | Git status (`:Git` or Neogit) |
-| `<leader>gd` | Git diff split (`:Gdiffsplit`) |
-| `<leader>gb` | Git blame (`:Git blame`) |
+| `Print` | Interactive area selection -> Save to `~/Pictures/Screenshots` & copy |
+| `SUPER + Print` | Full screen capture -> Save & copy |
+| `SHIFT + Print` | Active window capture -> Save & copy |
+| `CTRL + Print` | Interactive area selection -> Copy to clipboard only |
 
 ---
 
-## 📦 Recommended Dependencies
+## 💻 Neovim Highlights & Blur Controls
 
-To get the full experience (LSP, icons, and ripgrep):
-
-```bash
-# Ubuntu / Debian
-sudo apt install ripgrep fzf nodejs npm
-
-# macOS (Homebrew)
-brew install ripgrep fzf node
-
-# Arch Linux
-sudo pacman -S ripgrep fzf nodejs npm
-```
-
-> **Font Recommendation**: Install a [Nerd Font](https://www.nerdfonts.com/) (e.g. *JetBrains Mono Nerd Font* or *FiraCode Nerd Font*) for icons and glyphs.
+- **Transparency Toggle**: Press `<leader>uT` in Normal mode to toggle TokyoNight background transparency on the fly.
+- **Buffer Management**: `<leader>c` or `<leader>bd` to delete buffer, `]b` / `[b` for next / previous tab.
+- **Fuzzy Finding**: `<leader>ff` for files, `<leader>fg` for live ripgrep, `<leader>fb` for buffers.
+- **Git**: `<leader>gs` for Neogit, `<leader>gd` for diff view.
 
 ---
 

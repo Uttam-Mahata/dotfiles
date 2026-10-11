@@ -1,0 +1,10 @@
+[SddmGreeterTheme]
+Name=Arch Slate
+Description=Clean minimalist SDDM theme styled with Arch Linux accents
+Author=uttam
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=arch-slate
+QtVersion=6

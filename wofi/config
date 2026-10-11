@@ -1,0 +1,14 @@
+# Spotlight-style launcher: icons, centred near the top, fuzzy search
+allow_images=true
+image_size=30
+width=640
+height=460
+location=top
+yoffset=120
+prompt=Search apps
+insensitive=true
+matching=fuzzy
+hide_scroll=true
+no_actions=true
+term=kitty
+columns=1

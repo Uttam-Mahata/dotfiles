@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Open a new empty workspace on the monitor you are on (Super+N).
+# Spare ranges so it never pulls focus to the other screen:
+#   laptop (eDP-1): 11-20     external (HDMI-A-1): 21-30     anything else: 31-40
+mon=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
+case "$mon" in
+  eDP-1)     lo=11 ;;
+  HDMI-A-1)  lo=21 ;;
+  *)         lo=31 ;;
+esac
+hi=$((lo + 9))
+
+used=$(hyprctl workspaces -j | jq -r '.[].id')
+for id in $(seq "$lo" "$hi"); do
+  if ! grep -qx "$id" <<<"$used"; then
+    hyprctl dispatch "hl.dsp.focus({ workspace = $id })" >/dev/null
+    exit 0
+  fi
+done
+notify-send -t 2500 "Workspaces" "All of $lo-$hi are in use on $mon" 2>/dev/null

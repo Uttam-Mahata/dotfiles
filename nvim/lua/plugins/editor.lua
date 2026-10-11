@@ -1,10 +1,31 @@
 -- Ported from the previous hand-rolled config.
 
 return {
-  -- Colorscheme: tokyonight-storm (was the previous default)
+  -- Colorscheme: tokyonight-storm, transparent so the terminal's own opacity (kitty 85%)
+  -- and the desktop blur show through. Toggle with <leader>uT (see keymaps.lua).
   {
     "folke/tokyonight.nvim",
-    opts = { style = "storm" },
+    opts = {
+      style = "storm",
+      transparent = true,
+      styles = { sidebars = "transparent", floats = "transparent" },
+      on_highlights = function(hl, _)
+        if vim.g.nvim_transparent == false then
+          return
+        end
+        -- groups some plugins still paint with a solid background
+        local clear = {
+          "NeoTreeNormal", "NeoTreeNormalNC", "NeoTreeEndOfBuffer", "NeoTreeWinSeparator",
+          "BufferLineFill", "BufferLineBackground",
+          "SnacksPickerNormal", "SnacksPickerBorder", "SnacksNormal",
+          "WhichKeyNormal", "WhichKeyFloat",
+          "Pmenu", "PmenuSbar",
+        }
+        for _, group in ipairs(clear) do
+          hl[group] = vim.tbl_extend("force", hl[group] or {}, { bg = "NONE" })
+        end
+      end,
+    },
   },
   {
     "LazyVim/LazyVim",

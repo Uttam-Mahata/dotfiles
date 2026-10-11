@@ -1,0 +1,47 @@
+/* wofi: translucent rounded panel (Hyprland blurs what is behind it) */
+* {
+  font-family: "JetBrainsMono Nerd Font", "Inter", sans-serif;
+  font-size: 15px;
+}
+
+window {
+  background-color: transparent;       /* the visible card is #outer-box */
+}
+
+#outer-box {
+  margin: 0;
+  padding: 14px;
+  border-radius: 22px;
+  background-color: rgba(26, 27, 38, 0.62);
+  border: 1px solid rgba(23, 147, 209, 0.45);
+}
+
+#input {
+  margin: 0 0 12px 0;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+  box-shadow: none;
+  outline: none;
+}
+#input:focus { background-color: rgba(255, 255, 255, 0.14); }
+
+#scroll { margin: 0; background-color: transparent; }
+#inner-box { background-color: transparent; }
+
+#entry {
+  padding: 8px 12px;
+  margin: 2px 0;
+  border-radius: 14px;
+  background-color: transparent;
+}
+#entry:selected {
+  background-color: rgba(23, 147, 209, 0.38);
+  outline: none;
+}
+
+#img { margin-right: 14px; }
+#text { color: rgba(255, 255, 255, 0.92); }
+#text:selected { color: #ffffff; }

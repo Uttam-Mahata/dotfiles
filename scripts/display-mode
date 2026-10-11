@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# display-mode [menu | extend | mirror | external | laptop | status]
+#   extend   - separate screens (laptop left, external right), workspaces 1-5 / 6-10
+#   mirror   - external shows the same picture as the laptop
+#   external - laptop panel off, external only
+#   laptop   - external off, laptop only
+STATE="$HOME/.local/state/display-mode"
+EXT="HDMI-A-1"
+mkdir -p "$(dirname "$STATE")"
+cur=$(cat "$STATE" 2>/dev/null); cur=${cur:-extend}
+
+have_ext() { hyprctl monitors all -j | jq -e --arg m "$EXT" '.[] | select(.name == $m)' >/dev/null 2>&1; }
+note()     { command -v notify-send >/dev/null && notify-send -t 2500 "Display" "$1"; }
+
+label() {
+  case "$1" in
+    extend)   echo "Extend  (separate screens)" ;;
+    mirror)   echo "Mirror  (same picture on both)" ;;
+    external) echo "External only  (laptop screen off)" ;;
+    laptop)   echo "Laptop only  (external off)" ;;
+  esac
+}
+
+mode="$1"
+[ "$mode" = status ] && { echo "$cur"; exit 0; }
+
+if [ -z "$mode" ] || [ "$mode" = menu ]; then
+  list=""
+  for m in extend mirror external laptop; do
+    mark="   "; [ "$m" = "$cur" ] && mark="●  "
+    list+="${mark}$(label "$m")"$'\n'
+  done
+  pick=$(printf '%s' "$list" | wofi --dmenu --cache-file /dev/null -p "Display" --width 420 --height 230) || exit 0
+  case "$pick" in
+    *Extend*)   mode=extend ;;
+    *Mirror*)   mode=mirror ;;
+    *External*) mode=external ;;
+    *Laptop*)   mode=laptop ;;
+    *) exit 0 ;;
+  esac
+fi
+
+case "$mode" in extend|mirror|external|laptop) ;; *) echo "usage: display-mode [menu|extend|mirror|external|laptop|status]" >&2; exit 1 ;; esac
+
+# modes that need the external screen are refused when it is not connected
+if { [ "$mode" = mirror ] || [ "$mode" = external ]; } && ! have_ext; then
+  note "External monitor is not connected"
+  exit 1
+fi
+
+echo "$mode" > "$STATE"
+hyprctl reload >/dev/null
+note "$(label "$mode")"

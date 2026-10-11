@@ -31,6 +31,10 @@ opt.updatetime = 300
 opt.splitright = true
 opt.splitbelow = true
 
+-- Floating windows and the completion menu blend slightly into the transparent terminal
+opt.winblend = 10
+opt.pumblend = 10
+
 -- Search
 opt.ignorecase = true
 opt.smartcase = true

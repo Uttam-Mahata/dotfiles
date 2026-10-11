@@ -79,3 +79,17 @@ map("n", "<leader>ev", "<cmd>vsplit $MYVIMRC<cr>", { desc = "Edit init.lua" })
 
 -- Terminal mode
 map("t", "<Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+
+-- Toggle the transparent background (TokyoNight) on the fly
+map("n", "<leader>uT", function()
+  vim.g.nvim_transparent = vim.g.nvim_transparent == false
+  local on = vim.g.nvim_transparent ~= false
+  local opts = require("tokyonight.config").options
+  opts.transparent = on
+  opts.styles = vim.tbl_extend("force", opts.styles or {}, {
+    sidebars = on and "transparent" or "dark",
+    floats = on and "transparent" or "dark",
+  })
+  vim.cmd.colorscheme("tokyonight-storm")
+  vim.notify("Transparent background: " .. (on and "on" or "off"))
+end, { desc = "Toggle transparent background" })
