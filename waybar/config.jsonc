@@ -1,11 +1,11 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 28,
+  "height": 34,
   "spacing": 0,
-  "margin-top": 0,
+  "margin-top": 5,
   "margin-left": 14,
-  "margin-right": 8,
+  "margin-right": 14,
   "reload_style_on_change": true,
 
   "modules-left": ["group/launch", "hyprland/window"],
@@ -19,7 +19,7 @@
 
   "group/status": {
     "orientation": "horizontal",
-    "modules": ["custom/wg", "custom/tailscale", "network", "battery", "custom/power"]
+    "modules": ["custom/display", "custom/wg", "custom/tailscale", "network", "battery", "custom/power"]
   },
 
   "custom/arch": {
@@ -47,7 +47,7 @@
   },
 
   "clock": {
-    "format": "󰥔  {0:%H:%M}  {0:%a %d %b}",
+    "format": "{0:%I:%M %p}  {0:%a %d %b}",
     "tooltip-format": "<tt>{calendar}</tt>"
   },
 
@@ -74,6 +74,15 @@
     "format-disconnected": "󰤭",
     "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}",
     "on-click": "kitty -e nmtui"
+  },
+
+  "custom/display": {
+    "exec": "$HOME/.config/waybar/scripts/display.sh",
+    "return-type": "json",
+    "interval": "once",
+    "signal": 10,
+    "on-click": "$HOME/.local/bin/display-mode menu",
+    "tooltip": true
   },
 
   "custom/power": {

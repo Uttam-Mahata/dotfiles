@@ -188,6 +188,12 @@ setup_scripts() {
     install_entry "$DOTFILES_DIR/scripts/daily-wallpaper" "$HOME/.local/bin/daily-wallpaper"
     chmod +x "$HOME/.local/bin/daily-wallpaper" 2>/dev/null || true
 
+    install_entry "$DOTFILES_DIR/scripts/yazi-term" "$HOME/.local/bin/yazi-term"
+    chmod +x "$HOME/.local/bin/yazi-term" 2>/dev/null || true
+
+    install_entry "$DOTFILES_DIR/scripts/vplay" "$HOME/.local/bin/vplay"
+    chmod +x "$HOME/.local/bin/vplay" 2>/dev/null || true
+
     if [ -d "$DOTFILES_DIR/systemd/user" ]; then
         mkdir -p "$HOME/.config/systemd/user"
         install_entry "$DOTFILES_DIR/systemd/user/daily-wallpaper.service" "$HOME/.config/systemd/user/daily-wallpaper.service"

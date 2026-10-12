@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Play a video inside the kitty terminal (kitty graphics protocol).   vplay file.mkv [mpv options]
+exec mpv --vo=kitty --vo-kitty-use-shm=yes --profile=fast --keep-open=no "$@"

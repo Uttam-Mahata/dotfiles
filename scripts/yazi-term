@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Open Yazi in a terminal window (used by the "Yazi" desktop entry and Super+E).
+exec kitty --class yazi --title Yazi -e yazi "$@"

@@ -50,4 +50,5 @@ fi
 
 echo "$mode" > "$STATE"
 hyprctl reload >/dev/null
+pkill -RTMIN+10 -x waybar 2>/dev/null || true   # refresh the bar icon
 note "$(label "$mode")"

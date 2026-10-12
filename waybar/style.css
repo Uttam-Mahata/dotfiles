@@ -11,7 +11,11 @@
   box-shadow: none;
 }
 
-window#waybar { background: transparent; color: #ffffff; }
+window#waybar {
+  background: rgba(12, 13, 22, 0.35);
+  border-radius: 10px;
+  color: #ffffff;
+}
 tooltip { background: #1a1b26; color: #ffffff; border: 2px solid #1793d1; border-radius: 0; }
 tooltip label { color: #ffffff; }
 
@@ -35,12 +39,12 @@ tooltip label { color: #ffffff; }
   color: #ffffff;
   background: transparent;
   min-width: 22px;
-  min-height: 21px;
+  min-height: 22px;
   padding: 0;
-  margin: 3px 3px;
+  margin: 6px 3px;      /* vertical margin trims the height so the active block is a circle */
 }
-#workspaces button:hover { background: rgba(255, 255, 255, 0.25); color: #ffffff; }
-#workspaces button.active { background: #1793d1; color: #0b1018; }   /* solid block, dark digit */
+#workspaces button:hover { background: rgba(255, 255, 255, 0.25); color: #ffffff; border-radius: 999px; }
+#workspaces button.active { background: #1793d1; color: #ffffff; border-radius: 999px; }
 #workspaces button.empty { color: #ffffff; }
 
 #window { color: #ffffff; }
@@ -49,9 +53,12 @@ window#waybar.empty #window { background: transparent; }
 #clock { color: #ffffff; padding: 0 10px; }
 
 /* right-hand status block */
-#status { padding: 0 3px; }
-#custom-wg, #custom-tailscale, #network, #battery, #custom-power { padding: 0 6px; color: #ffffff; }
-#custom-power { color: #ffffff; font-size: 17px; font-weight: bold; padding: 0 8px 0 6px; }
+#status {
+  padding: 0 4px;
+  margin-right: 6px;
+}
+#custom-wg, #custom-tailscale, #network, #battery, #custom-display, #custom-power { padding: 0 6px; color: #ffffff; }
+#custom-power { color: #ffffff; font-size: 16px; font-weight: bold; padding: 0 6px; }
 #custom-power:hover { color: #c0caf5; }
 #custom-wg.up { color: #ffffff; }
 #custom-wg.down, #custom-tailscale.down { color: rgba(255, 255, 255, 0.55); }   /* dimmer = not connected */
@@ -61,13 +68,9 @@ window#waybar.empty #window { background: transparent; }
 #battery.warning:not(.charging) { color: #e0af68; }
 #battery.critical:not(.charging) { color: #f7768e; }
 
-/* Align the bar's outer ends with the window edges (windows start/end at 12 px):
-   no margin or padding on the first and last group, so the logo and the power icon
-   sit exactly on the same vertical lines as the window borders. */
-#launch        { margin-left: 0;  padding-left: 0; }
-#custom-arch   { padding-left: 0; }
-#status        { margin-right: 0; padding-right: 0; }
-#custom-power  { padding-right: 6px; }   /* room for the glyph's overhang so it is not clipped; the bar margin is 6 px smaller to compensate */
+/* Align outer ends comfortably inside rounded corners */
+#launch        { margin-left: 6px; padding-left: 4px; }
+#custom-arch   { padding-left: 2px; }
 
 /* app icon next to the window title */
 #window image { margin-right: 8px; }

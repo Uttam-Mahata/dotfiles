@@ -76,7 +76,7 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "dolphin"
+local fileManager = "yazi-term"
 local menu        = "wofi --show drun"
 
 
@@ -172,7 +172,7 @@ hl.config({
 
         blur = {
             enabled   = true,
-            size      = 3,
+            size      = 4,
             passes    = 2,
             vibrancy  = 0.1696,
         },
