@@ -12,6 +12,31 @@ A complete, production-grade personal dotfiles ecosystem configured from scratch
 
 ---
 
+## 📸 Screenshots Showcase
+
+<div align="center">
+
+### 🖥️ Desktop & Tiled Workflow
+*Hyprland dynamic tiling with transparent Neovim and blurred Kitty GPU terminal over nature landscape*
+<img src="assets/screenshots/workflow.png" alt="Hyprland Workflow with Neovim and Kitty" width="100%" />
+
+<br/><br/>
+
+| 📟 Kitty Terminal & Waybar | 🌐 Firefox & Desktop Experience |
+|:---:|:---:|
+| <img src="assets/screenshots/kitty.png" alt="Kitty Terminal with TokyoNight Blur and Arch Cyan Accents" width="100%" /> | <img src="assets/screenshots/firefox.png" alt="Firefox Web Browser with Waybar" width="100%" /> |
+| *Kitty GPU terminal (0.35 opacity, 32 blur, Arch cyan cursor)* | *Firefox browsing with rounded corners & translucent Waybar* |
+
+<br/>
+
+### 🔐 SDDM Arch Slate Login Screen
+*QtQuick 6 greeter featuring Fuji night backdrop, live date/time, and Arch Linux styling*
+<img src="assets/screenshots/sddm.png" alt="SDDM Arch Slate Login Screen" width="100%" />
+
+</div>
+
+---
+
 ## 🎨 Unified Blur & Aesthetic Architecture
 
 Every desktop component is calibrated for visual coherence and legibility:
@@ -32,6 +57,8 @@ Every desktop component is calibrated for visual coherence and legibility:
 
 ```
 ~/projects/dotfiles/
+├── assets/
+│   └── screenshots/            # Showcase screenshots (SDDM, Kitty, Firefox, Workflow)
 ├── install.sh                  # Comprehensive modular installer (symlinks & backups)
 ├── hypr/
 │   ├── hyprland.lua            # Hyprland native Lua config (monitors, keybinds, rules)

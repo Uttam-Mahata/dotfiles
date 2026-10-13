@@ -336,6 +336,15 @@ local monitorSync = os.getenv("HOME") .. "/.config/hypr/scripts/monitor-sync.sh"
 hl.on("monitor.added",   function() hl.exec_cmd(monitorSync) end)
 hl.on("monitor.removed", function() hl.exec_cmd(monitorSync) end)
 
+-- Yazi as the system file chooser (upload / open dialogs): float it like a dialog
+hl.window_rule({
+    name   = "yazi-picker",
+    match  = { class = "^yazi-picker$" },
+    float  = true,
+    center = true,
+    size   = "1000 640",
+})
+
 -- Desktop services: wallpaper, idle/lock, clipboard history
 hl.on("hyprland.start", function ()
     hl.exec_cmd(os.getenv("HOME") .. "/.local/bin/daily-wallpaper daily")
