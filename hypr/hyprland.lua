@@ -28,20 +28,20 @@ local displayMode = readDisplayMode()
 
 if displayMode == "mirror" then
     -- external screen shows exactly what the laptop panel shows
-    hl.monitor({ output = "eDP-1",    mode = "preferred", position = "0x0", scale = 1.5 })
-    hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto", scale = 1, mirror = "eDP-1" })
+    hl.monitor({ output = "eDP-1",    mode = "preferred", position = "0x0", scale = 1.25 })
+    hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto", scale = 1.25, mirror = "eDP-1" })
 elseif displayMode == "external" then
     -- laptop panel off, everything on the external screen
     hl.monitor({ output = "eDP-1",    disabled = true })
-    hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "0x0", scale = 1 })
+    hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "0x0", scale = 1.25 })
 elseif displayMode == "laptop" then
     -- external screen off, everything on the laptop panel
-    hl.monitor({ output = "eDP-1",    mode = "preferred", position = "0x0", scale = 1.5 })
+    hl.monitor({ output = "eDP-1",    mode = "preferred", position = "0x0", scale = 1.25 })
     hl.monitor({ output = "HDMI-A-1", disabled = true })
 else
     -- extend: separate screens, laptop on the left, external to its right
-    hl.monitor({ output = "eDP-1",    mode = "preferred", position = "0x0",        scale = 1.5 })
-    hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto-right", scale = 1 })
+    hl.monitor({ output = "eDP-1",    mode = "preferred", position = "0x0",        scale = 1.25 })
+    hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto-right", scale = 1.25 })
 
     -- Workspaces are pinned to a monitor: 1-5 on the laptop, 6-10 on the external screen.
     -- With only one screen connected they all collapse onto it automatically.
@@ -172,7 +172,7 @@ hl.config({
 
         blur = {
             enabled   = true,
-            size      = 4,
+            size      = 6,
             passes    = 2,
             vibrancy  = 0.1696,
         },

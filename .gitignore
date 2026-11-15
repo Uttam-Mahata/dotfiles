@@ -3,6 +3,9 @@
 *.swo
 *~
 *.bak
+*.pre-*
+__pycache__/
+*.pyc
 
 # Undo directories
 undodir/

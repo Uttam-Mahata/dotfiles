@@ -167,6 +167,12 @@ setup_kitty() {
     log_success "Kitty terminal configured."
 }
 
+setup_starship() {
+    log_info "Configuring Starship prompt..."
+    install_entry "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
+    log_success "Starship prompt configured."
+}
+
 setup_wofi() {
     log_info "Configuring Wofi..."
     mkdir -p "$HOME/.config/wofi"
@@ -296,6 +302,7 @@ main() {
                 setup_wallpapers
                 setup_scripts
                 setup_kitty
+                setup_starship
                 setup_wofi
                 setup_hypr
                 setup_waybar
@@ -308,6 +315,7 @@ main() {
                 setup_wallpapers
                 setup_scripts
                 setup_kitty
+                setup_starship
                 setup_wofi
                 setup_hypr
                 setup_waybar

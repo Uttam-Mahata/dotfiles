@@ -1,9 +1,12 @@
 [Unit]
-Description=Daily Wallpaper Rotation Timer
+Description=Daily Wallpaper (Bing image of the day) Timer
 Documentation=https://github.com/Uttam-Mahata/dotfiles
 
 [Timer]
-OnCalendar=*-*-* 00:00:00
+# Bing publishes around midnight; re-check every 6 h so an offline start still catches up.
+# The script is idempotent: once today's image is applied, later runs do nothing.
+OnCalendar=*-*-* 00,06,12,18:05:00
+RandomizedDelaySec=120
 Persistent=true
 
 [Install]

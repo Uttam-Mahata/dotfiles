@@ -258,9 +258,23 @@ set nocursorline
 set list listchars=tab:>\ ,trail:.,nbsp:+
 set fillchars=vert:\|
 set timeoutlen=500             " 500ms timeout for multi-key mappings & which-key
+let g:tokyonight_transparent_background = 1
 let g:tokyonight_style = 'storm'
 let g:tokyonight_enable_italic = 1
 silent! colorscheme tokyonight
+
+" Keep backgrounds transparent to match Kitty's blurred background
+highlight Normal guibg=NONE ctermbg=NONE
+highlight NormalNC guibg=NONE ctermbg=NONE
+highlight EndOfBuffer guibg=NONE ctermbg=NONE
+highlight SignColumn guibg=NONE ctermbg=NONE
+highlight NonText guibg=NONE ctermbg=NONE
+
+" High-contrast line numbers and readable comments over transparent backgrounds
+highlight LineNr guifg=#737aa2 guibg=NONE ctermfg=243 ctermbg=NONE
+highlight CursorLineNr guifg=#1793d1 guibg=NONE gui=bold ctermfg=38 ctermbg=NONE
+highlight Comment guifg=#8a94b5 gui=italic ctermfg=246
+highlight SpecialComment guifg=#8a94b5 gui=italic ctermfg=246
 let g:airline_theme = 'tokyonight'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 0
@@ -309,10 +323,42 @@ let g:which_key_map['C'] = [':bdelete!', 'force close buffer']
 let g:which_key_map['e'] = [':Lexplore', 'file explorer']
 let g:which_key_map['/'] = [':Rg', 'grep text']
 let g:which_key_map['='] = ['<C-w>=', 'balance splits']
+let g:which_key_map['m'] = {
+    \ 'name': '+markdown',
+    \ 'g': [':Glow', 'glow preview (full)'],
+    \ 'p': [':GlowSplit', 'glow preview (split)'],
+    \ }
 
 call which_key#register('<Space>', "g:which_key_map")
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 vnoremap <silent> <leader> :<c-u>WhichKeyVisual '<Space>'<CR>
+
+" ============================================================
+" Markdown & Glow Integration
+" ============================================================
+function! s:GlowPreview(split, ...) abort
+    let l:file = a:0 > 0 ? a:1 : expand('%:p')
+    if empty(l:file) || !filereadable(l:file)
+        echoerr "No readable markdown file to preview with glow"
+        return
+    endif
+    if a:split
+        execute 'vertical terminal ++close glow -p ' . shellescape(l:file)
+    else
+        execute 'terminal ++close glow -p ' . shellescape(l:file)
+    endif
+endfunction
+
+command! -nargs=? -complete=file Glow call s:GlowPreview(0, <f-args>)
+command! -nargs=? -complete=file GlowSplit call s:GlowPreview(1, <f-args>)
+
+nnoremap <silent> <leader>mg :Glow<CR>
+nnoremap <silent> <leader>mp :GlowSplit<CR>
+
+augroup MarkdownGlow
+    autocmd!
+    autocmd FileType markdown nnoremap <buffer> <silent> <leader>p :GlowSplit<CR>
+augroup END
 " restore cursor position when reopening a file (LazyVim)
 augroup restore_cursor
   autocmd!

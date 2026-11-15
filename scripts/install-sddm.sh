@@ -16,7 +16,7 @@ fi
 
 echo "==> Ensuring required dependencies are installed..."
 if command -v pacman &> /dev/null; then
-    sudo pacman -S --needed --noconfirm qt6-declarative qt6-svg qt5-quickcontrols2
+    sudo pacman -S --needed --noconfirm sddm qt6-declarative qt6-svg
 fi
 
 echo "==> Installing SDDM theme to $TARGET_DIR..."
@@ -31,6 +31,9 @@ sudo tee /etc/sddm.conf.d/arch-slate.conf > /dev/null << 'EOF'
 [Theme]
 Current=arch-slate
 EOF
+
+echo "==> Enabling sddm systemd service..."
+sudo systemctl enable sddm.service
 
 echo "==> Done! Theme installed and active: arch-slate"
 echo "You can test the installed theme in a preview window using:"

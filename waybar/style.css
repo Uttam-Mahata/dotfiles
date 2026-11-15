@@ -2,7 +2,7 @@
 * {
   /* text in a normal proportional font; the Nerd Font only supplies the icons */
   font-family: "Adwaita Sans", "Noto Sans", "JetBrainsMono Nerd Font", sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   border: none;
   border-radius: 0;
@@ -12,25 +12,24 @@
 }
 
 window#waybar {
-  background: rgba(12, 13, 22, 0.35);
-  border-radius: 10px;
+  background: transparent;
   color: #ffffff;
 }
 tooltip { background: #1a1b26; color: #ffffff; border: 2px solid #1793d1; border-radius: 0; }
 tooltip label { color: #ffffff; }
 
 /* no fill and no outline: just the text and icons */
-#launch, #window, #clock, #status {
+#launch, #window, #clock, #net, #sys {
   background: transparent;
   border: none;
-  padding: 0 8px;
-  margin: 0 6px;
+  padding: 0 6px;
+  margin: 0 4px;
 }
 
 #custom-arch {
   color: #1793d1;
-  font-size: 19px;
-  padding: 0 18px 0 4px;     /* breathing room before the workspace numbers (no divider line) */
+  font-size: 17px;
+  padding: 0 12px 0 3px;     /* breathing room before the workspace numbers (no divider line) */
   margin: 4px 0 4px 0;
 }
 
@@ -38,31 +37,33 @@ tooltip label { color: #ffffff; }
 #workspaces button {
   color: #ffffff;
   background: transparent;
-  min-width: 22px;
+  min-width: 24px;
   min-height: 22px;
   padding: 0;
-  margin: 6px 3px;      /* vertical margin trims the height so the active block is a circle */
+  margin: 4px 2px;      /* vertical margin trims the height so the active block is a circle */
 }
-#workspaces button:hover { background: rgba(255, 255, 255, 0.25); color: #ffffff; border-radius: 999px; }
-#workspaces button.active { background: #1793d1; color: #ffffff; border-radius: 999px; }
+#workspaces button { border-radius: 50%; }
+#workspaces button:hover { background: rgba(255, 255, 255, 0.25); color: #ffffff; border-radius: 50%; }
+#workspaces button.active { background: transparent; color: #ffffff; border-radius: 50%; }
 #workspaces button.empty { color: #ffffff; }
 
 #window { color: #ffffff; }
 window#waybar.empty #window { background: transparent; }
 
-#clock { color: #ffffff; padding: 0 10px; }
+#clock { color: #ffffff; padding: 0 6px; }
 
 /* right-hand status block */
-#status {
+#net, #sys {
   padding: 0 4px;
-  margin-right: 6px;
 }
-#custom-wg, #custom-tailscale, #network, #battery, #custom-display, #custom-power { padding: 0 6px; color: #ffffff; }
+#custom-wg, #custom-tailscale, #bluetooth, #network, #battery, #custom-display, #custom-power { padding: 0 6px; color: #ffffff; }
 #custom-power { color: #ffffff; font-size: 16px; font-weight: bold; padding: 0 6px; }
 #custom-power:hover { color: #c0caf5; }
 #custom-wg.up { color: #ffffff; }
 #custom-wg.down, #custom-tailscale.down { color: rgba(255, 255, 255, 0.55); }   /* dimmer = not connected */
 #custom-tailscale.up { color: #ffffff; }
+#bluetooth.disabled, #bluetooth.off { color: rgba(255, 255, 255, 0.45); }
+#bluetooth.connected { color: #1793d1; }
 #network.disconnected { color: #f7768e; }
 #battery.charging, #battery.plugged { color: #ffffff; }
 #battery.warning:not(.charging) { color: #e0af68; }
@@ -73,4 +74,19 @@ window#waybar.empty #window { background: transparent; }
 #custom-arch   { padding-left: 2px; }
 
 /* app icon next to the window title */
-#window image { margin-right: 8px; }
+#window image { margin-right: 6px; }
+
+/* three separate floating islands: left (launcher + workspaces), center (window title), right (status) */
+#launch, #window, #net, #sys {
+  background: rgba(12, 13, 22, 0.3);
+  border-radius: 999px;
+  margin: 0 4px;
+  padding: 0 8px;
+}
+window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
+
+/* left island: no background */
+#launch { background: transparent; }
+
+/* right islands: no background */
+#net, #sys { background: transparent; }

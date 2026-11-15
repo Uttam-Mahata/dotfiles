@@ -9,7 +9,17 @@ return {
       style = "storm",
       transparent = true,
       styles = { sidebars = "transparent", floats = "transparent" },
+      on_colors = function(colors)
+        colors.comment = "#8a94b5"
+        colors.fg_gutter = "#737aa2"
+      end,
       on_highlights = function(hl, _)
+        hl.Comment = { fg = "#8a94b5", italic = true }
+        hl["@comment"] = { fg = "#8a94b5", italic = true }
+        hl.LineNr = { fg = "#737aa2", bg = "NONE" }
+        hl.LineNrAbove = { fg = "#737aa2", bg = "NONE" }
+        hl.LineNrBelow = { fg = "#737aa2", bg = "NONE" }
+        hl.CursorLineNr = { fg = "#1793d1", bold = true, bg = "NONE" }
         if vim.g.nvim_transparent == false then
           return
         end

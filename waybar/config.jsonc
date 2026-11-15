@@ -1,25 +1,25 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 34,
+  "height": 30,
   "spacing": 0,
-  "margin-top": 5,
+  "margin-top": 3,
   "margin-left": 14,
   "margin-right": 14,
   "reload_style_on_change": true,
 
-  "modules-left": ["group/launch", "hyprland/window"],
-  "modules-center": ["clock"],
-  "modules-right": ["group/status"],
+  "modules-left": ["group/launch"],
+  "modules-center": ["hyprland/window"],
+  "modules-right": ["group/sys"],
 
   "group/launch": {
     "orientation": "horizontal",
     "modules": ["custom/arch", "hyprland/workspaces"]
   },
 
-  "group/status": {
+  "group/sys": {
     "orientation": "horizontal",
-    "modules": ["custom/display", "custom/wg", "custom/tailscale", "network", "battery", "custom/power"]
+    "modules": ["clock", "custom/wg", "custom/tailscale", "bluetooth", "network", "custom/display", "battery", "custom/power"]
   },
 
   "custom/arch": {
@@ -30,7 +30,6 @@
 
   "hyprland/workspaces": {
     "format": "{id}",
-    "persistent-workspaces": { "eDP-1": [1, 2, 3, 4, 5], "HDMI-A-1": [6, 7, 8, 9, 10] },
     "all-outputs": false,
     "on-click": "activate",
     "on-scroll-up": "hyprctl dispatch workspace e-1",
@@ -40,15 +39,24 @@
   "hyprland/window": {
     "format": "{title}",
     "icon": true,
-    "icon-size": 20,
+    "icon-size": 18,
     "max-length": 48,
     "separate-outputs": true,
     "rewrite": { "^\\s*$": "" }
   },
 
   "clock": {
-    "format": "{0:%I:%M %p}  {0:%a %d %b}",
-    "tooltip-format": "<tt>{calendar}</tt>"
+    "format": "{0:%I:%M %p}",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "format": {
+        "months": "<span color='#ffffff'><b>{}</b></span>",
+        "weekdays": "<span color='#8c96a0'><b>{}</b></span>",
+        "days": "<span color='#ffffff'>{}</span>",
+        "today": "<span color='#1793d1'><b><u>[{}]</u></b></span>"
+      }
+    }
   },
 
   "custom/wg": {
@@ -67,13 +75,28 @@
     "on-click-right": "~/.config/waybar/scripts/tailscale-exit.sh toggle"
   },
 
+  "bluetooth": {
+    "format": "󰂯",
+    "format-disabled": "󰂲",
+    "format-off": "󰂲",
+    "format-connected": "󰂱",
+    "format-connected-battery": "󰂱 {device_battery_percentage}%",
+    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",
+    "on-click": "~/.config/waybar/scripts/bluetooth-menu.sh"
+  },
+
   "network": {
     "format-wifi": "{icon}",
     "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
     "format-ethernet": "󰈀",
     "format-disconnected": "󰤭",
     "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}",
-    "on-click": "kitty -e nmtui"
+    "tooltip-format-ethernet": "{ifname}: {ipaddr}",
+    "tooltip-format-disconnected": "Disconnected",
+    "on-click": "~/.config/waybar/scripts/wifi-menu.sh"
   },
 
   "custom/display": {
@@ -95,9 +118,14 @@
   "battery": {
     "bat": "BAT1",
     "states": { "warning": 25, "critical": 10 },
-    "format": "{icon}  {capacity}%",
-    "format-charging": "󱐋  {capacity}%",
-    "format-plugged": "󰚥  {capacity}%",
-    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰁹"]
+    "format": "{icon} {capacity}%",
+    "format-charging": "{icon} {capacity}%",
+    "format-plugged": "󰚥 {capacity}%",
+    "format-full": "{icon} {capacity}%",
+    "tooltip-format": "{timeTo} ({power} W)",
+    "format-icons": {
+      "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+      "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
+    }
   }
 }

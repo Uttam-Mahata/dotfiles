@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 Daily Wallpaper Rotator for Hyprland (hyprpaper)
-Rotates automatically on a daily basis through all wallpapers in ~/Pictures/Wallpapers.
+Each day it fetches Bing's "image of the day" (falls back to the local rotation when
+offline) and keeps every wallpaper in ~/Pictures/Wallpapers (+ bing/) in one playlist,
+which Super+Shift+W steps through.
 Author: Uttam Mahata
 """
 
@@ -12,28 +14,44 @@ import json
 import datetime
 import random
 import subprocess
+import re
+import shutil
+import time
+import urllib.request
 
 WALLPAPERS_DIR = os.path.expanduser("~/Pictures/Wallpapers")
 STATE_DIR = os.path.expanduser("~/.local/state/wallpaper")
 STATE_FILE = os.path.join(STATE_DIR, "state.json")
 CURRENT_LINK = os.path.join(WALLPAPERS_DIR, "current.jpg")
 
+# Bing "image of the day"
+BING_DIR = os.path.join(WALLPAPERS_DIR, "bing")
+BING_API = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=en-US"
+BING_KEEP = 30            # keep this many downloaded Bing images
+TARGET_SIZE = "1920x1080"  # pre-scale so hyprpaper does not have to downscale (soft/blurry)
+SOURCE_FILE = os.path.expanduser("~/.config/daily-wallpaper/source")  # contains: bing | local
+
 
 def get_available_wallpapers():
-    """Returns sorted list of all valid image files in WALLPAPERS_DIR."""
+    """Returns sorted list of all valid image files in WALLPAPERS_DIR and its bing/ folder."""
     extensions = ("*.jpg", "*.jpeg", "*.png")
+    if prefer_bing():
+        bing = sorted(glob.glob(os.path.join(BING_DIR, "bing-*.jpg")), reverse=True)  # newest first
+        if bing:
+            return bing
     all_files = []
-    for ext in extensions:
-        all_files.extend(glob.glob(os.path.join(WALLPAPERS_DIR, ext)))
-    # Exclude symlinks (like current.jpg) and backup files
+    for base in (WALLPAPERS_DIR, BING_DIR):
+        for ext in extensions:
+            all_files.extend(glob.glob(os.path.join(base, ext)))
+    # Exclude current.jpg (active symlink) and backup files
     return sorted([
         f for f in all_files
-        if not os.path.islink(f) and ".bak." not in os.path.basename(f)
+        if os.path.basename(f) != "current.jpg" and ".bak." not in os.path.basename(f) and os.path.isfile(f)
     ])
 
 
 def load_state(wallpapers):
-    """Loads state.json, initializing or updating the playlist if files changed."""
+    """Loads state.json. New files are appended (existing order is kept); missing ones dropped."""
     os.makedirs(STATE_DIR, exist_ok=True)
     state = {}
     if os.path.exists(STATE_FILE):
@@ -43,17 +61,26 @@ def load_state(wallpapers):
         except Exception:
             state = {}
 
-    playlist = state.get("playlist", [])
-    # Verify that existing playlist has the exact same files
-    if set(playlist) != set(wallpapers) or not playlist:
-        # Shuffle existing wallpapers for an organic rotation
-        shuffled = list(wallpapers)
-        random.seed(42)  # Consistent base shuffle
+    old = state.get("playlist", [])
+    if prefer_bing() and all("/bing/" in w for w in wallpapers):
+        current = old[state.get("current_index", 0) % len(old)] if old else None
+        state["playlist"] = wallpapers
+        state["current_index"] = wallpapers.index(current) if current in wallpapers else 0
+        return state
+    if not old:
+        shuffled = [w for w in wallpapers if "/bing/" not in w]
+        random.seed(42)  # consistent base shuffle
         random.shuffle(shuffled)
-        state["playlist"] = shuffled
+        playlist = shuffled + [w for w in wallpapers if "/bing/" in w]
         state["current_index"] = 0
         state["last_date"] = ""
-
+    else:
+        current = old[state.get("current_index", 0) % len(old)]
+        keep = [p for p in old if p in set(wallpapers)]
+        playlist = keep + [w for w in wallpapers if w not in set(keep)]
+        # stay on the same picture even if earlier entries disappeared
+        state["current_index"] = playlist.index(current) if current in playlist else 0
+    state["playlist"] = playlist
     return state
 
 
@@ -61,6 +88,99 @@ def save_state(state):
     """Saves the rotation state to disk."""
     with open(STATE_FILE, "w") as f:
         json.dump(state, f, indent=2)
+
+
+def prefer_bing():
+    """Source preference: ~/.config/daily-wallpaper/source = bing (default) | local."""
+    try:
+        return open(SOURCE_FILE).read().strip().lower() != "local"
+    except OSError:
+        return True
+
+
+def _fetch_one(img, headers):
+    """Download one Bing archive entry (scaled to TARGET_SIZE). Returns its path or None."""
+    title = re.sub(r"[^a-z0-9]+", "-", img.get("title", "image").lower()).strip("-")[:48] or "image"
+    dest = os.path.join(BING_DIR, f"bing-{img['startdate']}-{title}.jpg")
+    if os.path.isfile(dest):
+        return dest
+
+    tmp = dest + ".part"
+    for suffix in ("_UHD.jpg", "_1920x1080.jpg"):
+        url = "https://www.bing.com" + img["urlbase"] + suffix
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=60) as r, \
+                 open(tmp, "wb") as out:
+                if not r.headers.get("Content-Type", "").startswith("image/"):
+                    raise ValueError(f"not an image ({r.headers.get('Content-Type')})")
+                shutil.copyfileobj(r, out)
+            if os.path.getsize(tmp) < 50_000:
+                raise ValueError("file too small")
+            break
+        except Exception as e:
+            print(f"Download {suffix} failed: {e}", file=sys.stderr)
+            if os.path.exists(tmp):
+                os.remove(tmp)
+    else:
+        return None
+
+    # Pre-scale (Lanczos) to the screen size; keeps the picture sharp on 1080p panels.
+    if shutil.which("magick"):
+        r = subprocess.run(["magick", tmp, "-filter", "Lanczos", "-distort", "Resize", TARGET_SIZE + "^",
+                            "-gravity", "center", "-extent", TARGET_SIZE, "-quality", "94", dest],
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        os.remove(tmp)
+        if r.returncode != 0 or not os.path.isfile(dest):
+            return None
+    else:
+        os.replace(tmp, dest)
+
+    return dest
+
+
+def fetch_bing():
+    """Download today's Bing image (scaled to TARGET_SIZE). Returns its path, or None on failure."""
+    os.makedirs(BING_DIR, exist_ok=True)
+    headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) daily-wallpaper"}
+    data = None
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(BING_API, headers=headers)
+            data = json.load(urllib.request.urlopen(req, timeout=15))
+            break
+        except Exception as e:
+            print(f"Bing API attempt {attempt + 1} failed: {e}", file=sys.stderr)
+            time.sleep(5)
+    if not data:
+        return None
+
+    first = None
+    for img in data["images"]:
+        dest = _fetch_one(img, headers)
+        if first is None:
+            first = dest
+    if not first:
+        return None
+    # prune old downloads
+    olds = sorted(glob.glob(os.path.join(BING_DIR, "bing-*.jpg")))
+    for f in olds[:-BING_KEEP]:
+        try:
+            os.remove(f)
+        except OSError:
+            pass
+    return first
+
+
+def hypr_env():
+    """Environment with HYPRLAND_INSTANCE_SIGNATURE set, so hyprctl works from a systemd timer."""
+    env = os.environ.copy()
+    env.setdefault("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
+    if not env.get("HYPRLAND_INSTANCE_SIGNATURE"):
+        dirs = [d for d in glob.glob(f"/run/user/{os.getuid()}/hypr/*/") if os.path.exists(os.path.join(d, ".socket.sock"))]
+        if dirs:
+            newest = max(dirs, key=os.path.getmtime)
+            env["HYPRLAND_INSTANCE_SIGNATURE"] = os.path.basename(newest.rstrip("/"))
+    return env
 
 
 def apply_wallpaper(image_path, notify=True):
@@ -82,6 +202,7 @@ def apply_wallpaper(image_path, notify=True):
         subprocess.run(
             ["hyprctl", "hyprpaper", "wallpaper", f",{image_path},cover"],
             check=True,
+            env=hypr_env(),
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
@@ -126,7 +247,8 @@ def main():
         print("Usage: daily-wallpaper [COMMAND]")
         print("")
         print("Commands:")
-        print("  daily     Rotate wallpaper if not rotated today (Default)")
+        print("  daily     Fetch today's Bing image (or rotate locally if offline) once per day (Default)")
+        print("  bing      Fetch and apply today's Bing image now")
         print("  next      Force advance to next wallpaper")
         print("  prev      Move back to previous wallpaper")
         print("  random    Pick a random wallpaper")
@@ -156,15 +278,38 @@ def main():
     elif action == "random":
         current_index = random.randint(0, total - 1)
         state["last_date"] = today
+    elif action == "bing":
+        path = fetch_bing()
+        if not path:
+            print("Could not fetch Bing's image of the day.", file=sys.stderr)
+            sys.exit(1)
+        state = load_state(get_available_wallpapers())
+        playlist = state["playlist"]
+        total = len(playlist)
+        current_index = playlist.index(path)
+        state["last_date"] = today
     elif action in ("daily", "check"):
         if last_date == today:
-            # Already rotated today, ensure it's applied
+            # Already done today, just make sure it is applied
             selected = playlist[current_index % total]
             apply_wallpaper(selected, notify=False)
             print(f"Today's wallpaper already active: {os.path.basename(selected)}")
             return
+        path = fetch_bing() if prefer_bing() else None
+        if path:
+            state = load_state(get_available_wallpapers())
+            playlist = state["playlist"]
+            total = len(playlist)
+            current_index = playlist.index(path)
+            state["last_date"] = today
+        elif prefer_bing():
+            # offline or Bing unreachable: keep what is on screen, retry on the next timer run
+            selected = playlist[current_index % total]
+            apply_wallpaper(selected, notify=False)
+            print("Bing unavailable; keeping the current wallpaper (will retry).")
+            return
         else:
-            # New day: advance rotation
+            # local-only rotation
             current_index = (current_index + 1) % total
             state["last_date"] = today
     else:

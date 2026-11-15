@@ -1,0 +1,71 @@
+# ==============================================================================
+# Starship Configuration: Hybrid Capsule Prompt
+# Matches: 󰣇 uttam  ~  <command>
+# ==============================================================================
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+add_newline = false
+
+format = """
+$os\
+$username\
+[](fg:#1793d1 bg:#fca17d)\
+$directory\
+${custom.dir_end}\
+$git_branch\
+$git_status\
+${custom.git_end}\
+$character"""
+
+# Segment 1: Rounded Left Cap + Arch Logo + Username (Arch Cyan #1793d1)
+[os]
+disabled = false
+style = "bg:#1793d1 fg:#ffffff bold"
+format = "[](fg:#1793d1)[$symbol ]($style)"
+
+[os.symbols]
+Arch = "󰣇"
+
+[username]
+show_always = true
+style_user = "bg:#1793d1 fg:#ffffff bold"
+style_root = "bg:#1793d1 fg:#ffffff bold"
+format = "[$user ]($style)"
+
+# Segment 2: Peach Pill with Path (Peach #fca17d)
+[directory]
+style = "bg:#fca17d fg:#1a1b26 bold"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+# Rounded right closing cap when outside git
+[custom.dir_end]
+when = "! git rev-parse --is-inside-work-tree 2>/dev/null"
+command = "echo -n "
+style = "fg:#fca17d"
+format = "[$output ]($style)"
+
+# Segment 3: Git Branch (Pastel Blue #86bbd8)
+[git_branch]
+symbol = " "
+style = "bg:#86bbd8 fg:#1a1b26 bold"
+format = "[[](fg:#fca17d bg:#86bbd8) $symbol$branch ]($style)"
+
+[git_status]
+style = "bg:#86bbd8 fg:#1a1b26 bold"
+format = "[$all_status$ahead_behind ]($style)"
+
+# Rounded right closing cap when inside git
+[custom.git_end]
+when = "git rev-parse --is-inside-work-tree 2>/dev/null"
+command = "echo -n "
+style = "fg:#86bbd8"
+format = "[$output ]($style)"
+
+# Direct typing immediately after the capsule (no $ or > symbol)
+[character]
+success_symbol = " "
+error_symbol = "[! ](bold #f7768e)"
+format = "$symbol"

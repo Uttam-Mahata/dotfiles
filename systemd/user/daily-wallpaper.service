@@ -1,7 +1,8 @@
 [Unit]
-Description=Daily Wallpaper Rotator for Hyprland
+Description=Daily Wallpaper: fetch Bing image of the day and apply it (hyprpaper)
 After=graphical-session.target
 
 [Service]
 Type=oneshot
 ExecStart=%h/.local/bin/daily-wallpaper daily
+TimeoutStartSec=180
