@@ -1,6 +1,6 @@
 # ==============================================================================
-# Starship Configuration: Hybrid Capsule Prompt with $
-# Matches: 󰣇 uttam  ~  $ <command>
+# Starship Configuration: Hybrid Capsule Prompt ($ inside path block)
+# Matches: 󰣇 uttam  ~ $  <command>
 # ==============================================================================
 
 "$schema" = 'https://starship.rs/config-schema.json'
@@ -33,10 +33,10 @@ style_user = "bg:#1793d1 fg:#ffffff bold"
 style_root = "bg:#1793d1 fg:#ffffff bold"
 format = "[$user ]($style)"
 
-# Segment 2: Peach Pill with Path (Peach #fca17d)
+# Segment 2: Peach Pill with Path and $ inside (Peach #fca17d)
 [directory]
 style = "bg:#fca17d fg:#1a1b26 bold"
-format = "[ $path ]($style)"
+format = '[ $path \$ ]($style)'
 truncation_length = 3
 truncation_symbol = "…/"
 
@@ -64,8 +64,8 @@ command = "echo -n "
 style = "fg:#86bbd8"
 format = "[$output ]($style)"
 
-# Prompt character: $ in Arch cyan
+# Typing space immediately after the capsule
 [character]
-success_symbol = '[\$ ](bold #1793d1)'
-error_symbol = '[\$ ](bold #f7768e)'
+success_symbol = " "
+error_symbol = "[! ](bold #f7768e)"
 format = "$symbol"
