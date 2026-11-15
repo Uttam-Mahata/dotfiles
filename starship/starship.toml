@@ -1,11 +1,12 @@
 # ==============================================================================
-# Starship Configuration: Hybrid Capsule Prompt ($ inside path block)
+# Starship Configuration: Hybrid Capsule Prompt
 # Matches: 󰣇 uttam  ~ $  <command>
 # ==============================================================================
 
 "$schema" = 'https://starship.rs/config-schema.json'
 
-add_newline = false
+# Enable blank line between commands to prevent prompts from stacking/overlapping
+add_newline = true
 
 format = """
 $os\
@@ -64,7 +65,7 @@ command = "echo -n "
 style = "fg:#86bbd8"
 format = "[$output ]($style)"
 
-# Typing space immediately after the capsule
+# Direct typing space after capsule (no duplicate $)
 [character]
 success_symbol = " "
 error_symbol = "[! ](bold #f7768e)"
