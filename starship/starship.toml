@@ -1,6 +1,6 @@
 # ==============================================================================
-# Starship Configuration: Hybrid Capsule Prompt
-# Matches: 󰣇 uttam  ~  <command>
+# Starship Configuration: Hybrid Capsule Prompt with $
+# Matches: 󰣇 uttam  ~  $ <command>
 # ==============================================================================
 
 "$schema" = 'https://starship.rs/config-schema.json'
@@ -64,8 +64,8 @@ command = "echo -n "
 style = "fg:#86bbd8"
 format = "[$output ]($style)"
 
-# Direct typing immediately after the capsule (no $ or > symbol)
+# Prompt character: $ in Arch cyan
 [character]
-success_symbol = " "
-error_symbol = "[! ](bold #f7768e)"
+success_symbol = '[\$ ](bold #1793d1)'
+error_symbol = '[\$ ](bold #f7768e)'
 format = "$symbol"
