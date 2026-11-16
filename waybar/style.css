@@ -17,19 +17,22 @@ window#waybar.hidden { opacity: 0.2; }
 tooltip { background: rgba(26, 27, 38, 0.95); color: #ffffff; border: 1px solid #1793d1; border-radius: 10px; }
 tooltip label { color: #ffffff; font-weight: 500; }
 
-/* ---------- islands ---------- */
-#launch, #window, #clock, #hw, #sys, #mpris, #tray, #custom-recording {
-  background: transparent;
-  margin: 0 4px;
+/* ---------- islands: dark frosted pills (Hyprland blurs behind them) so icons read on any wallpaper ---------- */
+#launch, #window, #clock, #hw, #sys, #mpris, #tray {
+  background: rgba(26, 27, 38, 0.55);
+  border-radius: 999px;
+  margin: 2px 3px;
   padding: 0 6px;
 }
-#launch { margin-left: 6px; padding-left: 4px; }
-#clock  { padding: 0 12px; border-radius: 999px; }
-#clock:hover { background: rgba(255, 255, 255, 0.12); }
+#launch { padding-left: 10px; }
+#sys    { padding: 0 4px; }
+#clock  { padding: 0 14px; }
+window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
+#mpris.stopped, #tray.empty { background: transparent; padding: 0; margin: 0; }
 
 /* ---------- launcher + workspaces ---------- */
 #custom-arch { color: #1793d1; font-size: 17px; padding: 0 12px 0 2px; margin: 4px 0; }
-#custom-arch:hover { color: #7dcfff; }
+#custom-arch:hover { color: #ffffff; }
 
 #workspaces { padding: 0 2px; }
 #workspaces button {
@@ -51,7 +54,6 @@ tooltip label { color: #ffffff; font-weight: 500; }
 /* ---------- focused app ---------- */
 #window { color: rgba(255, 255, 255, 0.9); font-weight: 600; }
 #window image { margin-right: 6px; }
-window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
 
 /* ---------- media / tray / recording ---------- */
 #mpris { color: rgba(255, 255, 255, 0.9); font-weight: 600; }
@@ -98,13 +100,23 @@ window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
 }
 
 #custom-power { font-size: 16px; padding: 0 6px 0 8px; }
-#custom-power:hover { color: #f7768e; }
 
-/* hover feedback on everything clickable */
-#idle_inhibitor:hover, #custom-dnd:hover, #custom-wg:hover, #custom-tailscale:hover, #bluetooth:hover,
-#network:hover, #wireplumber:hover, #backlight:hover, #power-profiles-daemon:hover, #custom-display:hover {
-  color: #7dcfff;
+/* hover: rounded highlight behind the icon, text stays white */
+#idle_inhibitor, #custom-dnd, #custom-wg, #custom-tailscale, #bluetooth, #network, #wireplumber,
+#backlight, #power-profiles-daemon, #custom-display, #battery, #custom-power, #clock,
+#custom-hw-icon, #cpu, #memory, #mpris {
+  border-radius: 999px;
+  margin: 3px 1px;
+  transition: background 0.2s ease;
 }
+#clock { margin: 2px 3px; }
+#idle_inhibitor:hover, #custom-dnd:hover, #custom-wg:hover, #custom-tailscale:hover, #bluetooth:hover,
+#network:hover, #wireplumber:hover, #backlight:hover, #power-profiles-daemon:hover, #custom-display:hover,
+#battery:hover, #clock:hover, #custom-hw-icon:hover, #cpu:hover, #memory:hover, #mpris:hover {
+  background: rgba(23, 147, 209, 0.55);
+  color: #ffffff;
+}
+#custom-power:hover { background: #f7768e; color: #ffffff; }
 
 @keyframes pulse {
   from { opacity: 1; }

@@ -72,22 +72,6 @@ hl.window_rule({
     no_shadow = true,
 })
 
--- Smart gaps: a lone tiled window fills the workspace (no gaps, border or rounding)
-hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })
-hl.workspace_rule({ workspace = "f[1]",   gaps_out = 0, gaps_in = 0 })
-hl.window_rule({
-    name        = "smart-gaps-wtv1",
-    match       = { float = false, workspace = "w[tv1]" },
-    border_size = 0,
-    rounding    = 0,
-})
-hl.window_rule({
-    name        = "smart-gaps-f1",
-    match       = { float = false, workspace = "f[1]" },
-    border_size = 0,
-    rounding    = 0,
-})
-
 -- Curves and animations
 hl.curve("easeOutQuint",   { type = "bezier", points = { {0.23, 1},    {0.32, 1} } })
 hl.curve("easeInOutCubic", { type = "bezier", points = { {0.65, 0.05}, {0.36, 1} } })
