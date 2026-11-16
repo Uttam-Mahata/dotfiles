@@ -25,7 +25,7 @@ A complete, production-grade personal dotfiles ecosystem configured from scratch
 | 📟 Kitty Terminal & Waybar | 🌐 Firefox & Desktop Experience |
 |:---:|:---:|
 | <img src="assets/screenshots/kitty.png" alt="Kitty Terminal with TokyoNight Blur and Arch Cyan Accents" width="100%" /> | <img src="assets/screenshots/firefox.png" alt="Firefox Web Browser with Waybar" width="100%" /> |
-| *Kitty GPU terminal (0.35 opacity, 32 blur, Arch cyan cursor)* | *Firefox browsing with rounded corners & translucent Waybar* |
+| *Kitty GPU terminal (0.85 opacity, blur, Arch cyan cursor)* | *Firefox browsing with rounded corners & translucent Waybar* |
 
 <br/>
 
@@ -43,11 +43,12 @@ Every desktop component is calibrated for visual coherence and legibility:
 
 | Component | Visual Styling & Blur Implementation |
 |---|---|
-| **Hyprland** | Native Lua (`hyprland.lua`), rounded corners (10px), subtle borders (`#1793d1`), dynamic dwindle layout, and compositor blur. |
+| **Hyprland** | Modular native Lua (`hyprland.lua` + `modules/`), rounded corners (10px), 2px Arch-blue gradient focus border, dimmed inactive windows, shadows on floating windows only, smart gaps, window swallowing, and compositor blur. |
 | **Waybar** | Top bar with flat high-contrast typography (Adwaita & Noto Sans), Arch blue `#1793d1` active indicators, and blurred wallpaper backdrop (`waybar-blur` layer rule). |
 | **Hyprlock** | Frosted glass lockscreen with 3 blur passes, 7 blur size, live clock & date, `$USER@archlinux` banner, and Arch gradient input box. |
 | **SDDM Login** | Custom **Arch Slate** QtQuick 6 greeter with matching Fuji night backdrop, live clock/date, Arch logo, and smooth authentication feedback. |
-| **Kitty Terminal** | GPU-accelerated terminal with `background_opacity 0.35` and `background_blur 32`, TokyoNight palette, and split navigation. |
+| **Kitty Terminal** | GPU-accelerated terminal with `background_opacity 0.85` and `background_blur 32`, TokyoNight palette, and split navigation. |
+| **Dunst** | Rounded translucent TokyoNight notifications with Arch-blue frame, blurred backdrop, and progress-bar OSD for volume / brightness keys. |
 | **Wofi** | Translucent rounded Spotlight launcher (`#outer-box` `rgba(26,27,38,0.62)`) with subtle Arch blue border and compositor layer blur (`popin 92%`). |
 | **Neovim** | LazyVim with transparent TokyoNight background integration (`<leader>uT` live toggle) and blended popups (`winblend = 10`, `pumblend = 10`). |
 
@@ -61,9 +62,11 @@ Every desktop component is calibrated for visual coherence and legibility:
 │   └── screenshots/            # Showcase screenshots (SDDM, Kitty, Firefox, Workflow)
 ├── install.sh                  # Comprehensive modular installer (symlinks & backups)
 ├── hypr/
-│   ├── hyprland.lua            # Hyprland native Lua config (monitors, keybinds, rules)
+│   ├── hyprland.lua            # Entry point: loads modules/*.lua
+│   ├── modules/                # monitors, looks, input, autostart, rules, binds
+│   ├── hyprsunset.conf         # Night light schedule (optional hyprsunset)
 │   ├── hyprlock.conf           # Arch Linux themed frosted lockscreen
-│   ├── hypridle.conf           # Idle daemon (dim -> lock -> dpms off -> suspend)
+│   ├── hypridle.conf           # Idle daemon (dim -> lock -> dpms off -> suspend on battery)
 │   ├── hyprpaper.conf          # Wallpaper daemon configuration
 │   └── scripts/
 │       └── monitor-sync.sh     # Hotplug monitor & workspace rebalancing
@@ -121,7 +124,9 @@ chmod +x install.sh
 ```bash
 ./install.sh --desktop      # All desktop tools (Hyprland, Waybar, Kitty, Wofi, Scripts, Wallpapers)
 ./install.sh --hypr         # Hyprland, Hyprlock, Hypridle, Hyprpaper
+./install.sh --packages     # Required + optional pacman packages (sudo)
 ./install.sh --waybar       # Waybar configuration & helper scripts
+./install.sh --dunst        # Dunst notification theme
 ./install.sh --kitty        # Kitty terminal configuration
 ./install.sh --wofi         # Wofi application launcher
 ./install.sh --scripts      # Helper utilities (display-mode, new-workspace) to ~/.local/bin
@@ -150,12 +155,16 @@ Apply the theme system-wide (requires sudo):
 |---|---|
 | `SUPER + Q` | Launch Kitty terminal |
 | `SUPER + R` | Application launcher (Wofi drun) |
-| `SUPER + E` | Open Dolphin file manager |
+| `SUPER + E` | Open Yazi file manager |
+| `SUPER + /` | **Searchable keybind cheatsheet** |
+| `SUPER + X` | Power menu |
+| `SUPER + B` / `SUPER + SHIFT + B` | Toggle / restart Waybar |
 | `SUPER + Escape` | Lock session immediately (`hyprlock`) |
-| `SUPER + M` | Exit / Power menu |
+| `SUPER + M` | Exit Hyprland |
 | `SUPER + SHIFT + V` | Clipboard history search (`cliphist` + Wofi) |
 | `SUPER + SHIFT + C` | Color picker (`hyprpicker --autocopy`) |
 | `SUPER + SHIFT + W` | **Next Wallpaper** (Rotate wallpaper immediately) |
+| `SUPER + SHIFT + N` / `CTRL + N` / `ALT + N` | Previous notification / dismiss all / do not disturb |
 
 ### Window & Layout Management
 | Shortcut | Action |
@@ -164,7 +173,11 @@ Apply the theme system-wide (requires sudo):
 | `SUPER + V` | Toggle floating state |
 | `SUPER + P` | Toggle pseudo-tile |
 | `SUPER + J` | Toggle dwindle split orientation |
+| `SUPER + F` / `SUPER + SHIFT + F` | Fullscreen / maximize |
+| `SUPER + SHIFT + T` | Pin floating window to all workspaces |
 | `SUPER + Left/Right/Up/Down` | Move focus in direction |
+| `SUPER + SHIFT + Arrows` | Move window in direction |
+| `SUPER + CTRL + Arrows` | Resize window (hold to repeat) |
 | `SUPER + LMB (drag)` | Move window |
 | `SUPER + RMB (drag)` | Resize window |
 
@@ -179,6 +192,7 @@ Apply the theme system-wide (requires sudo):
 | `SUPER + 1..5` | Workspaces 1–5 (Laptop panel `eDP-1`) |
 | `SUPER + 6..0` | Workspaces 6–10 (External monitor `HDMI-A-1`) |
 | `SUPER + S` | Toggle special scratchpad workspace |
+| `` SUPER + ` `` | Drop-down terminal |
 
 ### Screenshots (grim + slurp)
 | Shortcut | Action |
@@ -187,6 +201,8 @@ Apply the theme system-wide (requires sudo):
 | `SUPER + Print` | Full screen capture -> Save & copy |
 | `SHIFT + Print` | Active window capture -> Save & copy |
 | `CTRL + Print` | Interactive area selection -> Copy to clipboard only |
+| `ALT + Print` | Area selection -> annotate in `satty` (optional) |
+| `SUPER + SHIFT + R` | Start / stop screen recording (`wf-recorder`, optional) -> `~/Videos/Recordings` |
 
 ---
 

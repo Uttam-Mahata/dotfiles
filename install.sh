@@ -132,6 +132,8 @@ setup_hypr() {
     mkdir -p "$HOME/.config/hypr/scripts"
 
     install_entry "$DOTFILES_DIR/hypr/hyprland.lua" "$HOME/.config/hypr/hyprland.lua"
+    install_entry "$DOTFILES_DIR/hypr/modules" "$HOME/.config/hypr/modules"
+    install_entry "$DOTFILES_DIR/hypr/hyprsunset.conf" "$HOME/.config/hypr/hyprsunset.conf"
     install_entry "$DOTFILES_DIR/hypr/hyprlock.conf" "$HOME/.config/hypr/hyprlock.conf"
     install_entry "$DOTFILES_DIR/hypr/hypridle.conf" "$HOME/.config/hypr/hypridle.conf"
     install_entry "$DOTFILES_DIR/hypr/hyprpaper.conf" "$HOME/.config/hypr/hyprpaper.conf"
@@ -139,6 +141,37 @@ setup_hypr() {
     chmod +x "$HOME/.config/hypr/scripts/monitor-sync.sh" 2>/dev/null || true
 
     log_success "Hyprland suite configured."
+}
+
+setup_dunst() {
+    log_info "Configuring Dunst notifications..."
+    mkdir -p "$HOME/.config/dunst"
+    install_entry "$DOTFILES_DIR/dunst/dunstrc" "$HOME/.config/dunst/dunstrc"
+    command -v dunstctl >/dev/null 2>&1 && dunstctl reload 2>/dev/null || true
+    log_success "Dunst configured."
+}
+
+# Packages the desktop relies on (required) and optional extras the config uses when present.
+REQUIRED_PKGS=(hyprland hyprpaper hypridle hyprlock hyprpicker waybar wofi kitty dunst libnotify jq
+               grim slurp wl-clipboard cliphist brightnessctl playerctl wireplumber pavucontrol
+               blueman network-manager-applet power-profiles-daemon polkit-kde-agent
+               ttf-jetbrains-mono-nerd noto-fonts)
+OPTIONAL_PKGS=(hyprsunset satty wf-recorder btop papirus-icon-theme nwg-look qt6ct)
+
+setup_packages() {
+    log_info "Installing packages with pacman (sudo)..."
+    local missing=()
+    for p in "${REQUIRED_PKGS[@]}" "${OPTIONAL_PKGS[@]}"; do
+        pacman -Qq "$p" >/dev/null 2>&1 || missing+=("$p")
+    done
+    if [ ${#missing[@]} -eq 0 ]; then
+        log_success "All packages already installed."
+        return
+    fi
+    log_info "Missing: ${missing[*]}"
+    sudo pacman -S --needed "${missing[@]}"
+    systemctl enable --now power-profiles-daemon.service 2>/dev/null || true
+    log_success "Packages installed."
 }
 
 setup_waybar() {
@@ -200,6 +233,11 @@ setup_scripts() {
     install_entry "$DOTFILES_DIR/scripts/vplay" "$HOME/.local/bin/vplay"
     chmod +x "$HOME/.local/bin/vplay" 2>/dev/null || true
 
+    for s in osd keybinds battery-notify screenrec; do
+        install_entry "$DOTFILES_DIR/scripts/$s" "$HOME/.local/bin/$s"
+        chmod +x "$HOME/.local/bin/$s" 2>/dev/null || true
+    done
+
     if [ -d "$DOTFILES_DIR/systemd/user" ]; then
         mkdir -p "$HOME/.config/systemd/user"
         install_entry "$DOTFILES_DIR/systemd/user/daily-wallpaper.service" "$HOME/.config/systemd/user/daily-wallpaper.service"
@@ -244,6 +282,8 @@ usage() {
     echo "  --desktop     Install all desktop components (Hyprland, Waybar, Kitty, Wofi, Scripts, Wallpapers)"
     echo "  --hypr        Install Hyprland, Hyprlock, Hypridle, and Hyprpaper"
     echo "  --waybar      Install Waybar status bar and helper scripts"
+    echo "  --dunst       Install Dunst notification theme"
+    echo "  --packages    Install required + optional pacman packages (requires sudo)"
     echo "  --kitty       Install Kitty terminal configuration"
     echo "  --wofi        Install Wofi application launcher"
     echo "  --scripts     Install display-mode and new-workspace to ~/.local/bin"
@@ -275,7 +315,7 @@ main() {
                 INSTALL_METHOD="copy"
                 shift
                 ;;
-            --all|--desktop|--hypr|--waybar|--kitty|--wofi|--scripts|--wallpapers|--sddm|--nvim|--vim)
+            --all|--desktop|--hypr|--waybar|--dunst|--packages|--kitty|--wofi|--scripts|--wallpapers|--sddm|--nvim|--vim)
                 TARGETS+=("${1#--}")
                 shift
                 ;;
@@ -306,9 +346,11 @@ main() {
                 setup_wofi
                 setup_hypr
                 setup_waybar
+                setup_dunst
                 setup_vim
                 setup_nvim
                 echo ""
+                log_info "To install packages, run: ./install.sh --packages"
                 log_info "To install the system-wide SDDM theme, run: ./install.sh --sddm"
                 ;;
             desktop)
@@ -319,12 +361,19 @@ main() {
                 setup_wofi
                 setup_hypr
                 setup_waybar
+                setup_dunst
                 ;;
             hypr)
                 setup_hypr
                 ;;
             waybar)
                 setup_waybar
+                ;;
+            dunst)
+                setup_dunst
+                ;;
+            packages)
+                setup_packages
                 ;;
             kitty)
                 setup_kitty
