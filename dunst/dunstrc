@@ -5,8 +5,8 @@
     monitor = 0
     follow = mouse
     layer = overlay
-    origin = top-right
-    offset = (14, 46)
+    origin = top-center
+    offset = (0, 44)
     width = (280, 380)
     height = (0, 220)
     notification_limit = 5
