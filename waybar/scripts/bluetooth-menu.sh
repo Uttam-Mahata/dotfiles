@@ -114,7 +114,7 @@ def get_devices():
 
 def prompt_wofi(prompt_text, items, width=440, height=360):
     cmd = [
-        "wofi",
+        os.path.expanduser("~/.local/bin/wofi-menu"), "bluetooth",
         "--dmenu",
         "--cache-file", "/dev/null",
         "-p", prompt_text,

@@ -56,6 +56,21 @@ hl.window_rule({
     float = true,
 })
 
+------------------------------------------------------------------ wofi menus (run as focused floating windows by wofi-menu)
+hl.window_rule({
+    name          = "wofi-menu",
+    match         = { class = "^wofi$" },
+    float         = true,
+    center        = true,
+    pin           = true,
+    stay_focused  = true,
+    border_size   = 0,
+    rounding      = 22,
+    no_shadow     = false,
+    dim_around    = true,
+    animation     = "popin 92%",
+})
+
 ------------------------------------------------------------------ app tweaks
 -- Firefox: opaque when focused (readable text), lightly translucent when not
 hl.window_rule({

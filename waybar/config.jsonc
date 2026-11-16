@@ -35,7 +35,7 @@
   "custom/arch": {
     "format": "󰣇",
     "tooltip": false,
-    "on-click": "wofi --show drun",
+    "on-click": "~/.local/bin/wofi-menu launcher --show drun",
     "on-click-right": "~/.local/bin/keybinds"
   },
 
@@ -128,8 +128,10 @@
   "custom/wg": {
     "exec": "~/.config/waybar/scripts/wg.sh",
     "return-type": "json",
-    "interval": 5,
-    "on-click": "~/.config/waybar/scripts/wg.sh toggle"
+    "interval": 10,
+    "signal": 13,
+    "on-click": "~/.config/waybar/scripts/wg.sh menu",
+    "on-click-right": "~/.config/waybar/scripts/wg.sh toggle"
   },
 
   "custom/tailscale": {

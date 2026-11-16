@@ -30,7 +30,7 @@ if [ -z "$mode" ] || [ "$mode" = menu ]; then
     mark="   "; [ "$m" = "$cur" ] && mark="●  "
     list+="${mark}$(label "$m")"$'\n'
   done
-  pick=$(printf '%s' "$list" | wofi --dmenu --cache-file /dev/null -p "Display" --width 420 --height 230) || exit 0
+  pick=$(printf '%s' "$list" | "$HOME/.local/bin/wofi-menu" display --dmenu --cache-file /dev/null -p "Display" --width 420 --height 230) || exit 0
   case "$pick" in
     *Extend*)   mode=extend ;;
     *Mirror*)   mode=mirror ;;

@@ -122,7 +122,7 @@ def get_wifi_list(rescan=False):
 
 def prompt_wofi(prompt_text, items, width=440, height=380, password=False):
     cmd = [
-        "wofi",
+        os.path.expanduser("~/.local/bin/wofi-menu"), "wifi",
         "--dmenu",
         "--cache-file", "/dev/null",
         "-p", prompt_text,

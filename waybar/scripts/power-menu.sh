@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Power menu for Waybar (wofi). Reboot / shutdown / log out ask for confirmation.
 choice=$(printf '%s\n' "  Lock" "󰤄  Suspend" "󰜉  Reboot" "󰐥  Shutdown" "󰍃  Log out" |
-    wofi --dmenu --cache-file /dev/null -p "Power" --width 300 --height 270) || exit 0
+    "$HOME/.local/bin/wofi-menu" power --dmenu --cache-file /dev/null -p "Power" --width 300 --height 270) || exit 0
 confirm() {
-  [ "$(printf 'No\nYes\n' | wofi --dmenu --cache-file /dev/null -p "$1?" --width 260 --height 130)" = Yes ]
+  [ "$(printf 'No\nYes\n' | "$HOME/.local/bin/wofi-menu" power --dmenu --cache-file /dev/null -p "$1?" --width 260 --height 130)" = Yes ]
 }
 case "$choice" in
   *Lock)     loginctl lock-session ;;

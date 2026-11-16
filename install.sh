@@ -233,7 +233,7 @@ setup_scripts() {
     install_entry "$DOTFILES_DIR/scripts/vplay" "$HOME/.local/bin/vplay"
     chmod +x "$HOME/.local/bin/vplay" 2>/dev/null || true
 
-    for s in osd keybinds battery-notify screenrec; do
+    for s in osd keybinds battery-notify screenrec wofi-menu; do
         install_entry "$DOTFILES_DIR/scripts/$s" "$HOME/.local/bin/$s"
         chmod +x "$HOME/.local/bin/$s" 2>/dev/null || true
     done

@@ -73,7 +73,7 @@ for p in peers:
     print(mark + p["HostName"] + tail + "\t" + p["TailscaleIPs"][0])
 ')
     [ -z "$choices" ] && { notify-send "Exit node" "tailscale not reachable"; exit 1; }
-    pick=$(cut -f1 <<<"$choices" | wofi --dmenu --cache-file /dev/null -p "Exit node" --width 380 --height 300) || exit 0
+    pick=$(cut -f1 <<<"$choices" | "$HOME/.local/bin/wofi-menu" tailscale --dmenu --cache-file /dev/null -p "Exit node" --width 380 --height 300) || exit 0
     [ -z "$pick" ] && exit 0
     ip=$(awk -F'\t' -v p="$pick" '$1 == p {print $2}' <<<"$choices")
     if [ -z "$ip" ]; then apply off; else apply "$ip"; fi

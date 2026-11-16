@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# wofi-menu NAME [wofi args...] — drop-in wofi wrapper used by every bar menu and launcher.
+#  • only one menu at a time: opening a menu closes whichever one is open
+#  • clicking the same icon / pressing the same key again closes it (toggle)
+#  • runs wofi as a focused floating window, so Esc and typing work immediately
+#    without hovering (styled by the "wofi" rules in hypr/modules/rules.lua)
+name="${1:?usage: wofi-menu NAME [wofi args...]}"; shift
+state="${XDG_RUNTIME_DIR:-/tmp}/wofi-menu.name"
+
+if pgrep -x wofi >/dev/null; then
+    prev=$(cat "$state" 2>/dev/null)
+    pkill -x wofi
+    for _ in $(seq 20); do pgrep -x wofi >/dev/null || break; sleep 0.05; done
+    [ "$prev" = "$name" ] && exit 130          # same menu clicked again: just close it
+fi
+
+echo "$name" > "$state"
+wofi --normal-window "$@"
+rc=$?
+[ "$(cat "$state" 2>/dev/null)" = "$name" ] && ! pgrep -x wofi >/dev/null && rm -f "$state"
+exit $rc

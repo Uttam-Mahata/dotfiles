@@ -8,7 +8,7 @@ local mainMod  = "SUPER"
 
 local terminal    = "kitty"
 local fileManager = "yazi-term"
-local menu        = "wofi --show drun"
+local menu        = home .. "/.local/bin/wofi-menu launcher --show drun"
 
 local sheet = {}
 local function bind(keys, dispatcher, desc, opts)
@@ -97,7 +97,7 @@ bind("ALT + Print",    sh([[g=$(slurp) || exit; if command -v satty >/dev/null; 
 bind(M("SHIFT + R"),   sh(bin .. "screenrec"),                                      "Start/stop screen recording")
 
 ------------------------------------------------------------------ tools
-bind(M("SHIFT + V"),   sh([[cliphist list | wofi --dmenu --cache-file /dev/null -p "Clipboard" | cliphist decode | wl-copy]]), "Clipboard history")
+bind(M("SHIFT + V"),   sh([[cliphist list | ~/.local/bin/wofi-menu clipboard --dmenu --cache-file /dev/null -p "Clipboard" | cliphist decode | wl-copy]]), "Clipboard history")
 bind(M("SHIFT + C"),   sh("hyprpicker --autocopy"),                         "Colour picker")
 bind(M("SHIFT + W"),   sh(bin .. "daily-wallpaper next"),                   "Next wallpaper")
 bind(M("SHIFT + N"),   sh("dunstctl history-pop"),                          "Show previous notification")

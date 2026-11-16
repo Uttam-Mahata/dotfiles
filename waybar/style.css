@@ -101,21 +101,32 @@ window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
 
 #custom-power { font-size: 16px; padding: 0 6px 0 8px; }
 
-/* hover: rounded highlight behind the icon, text stays white */
-#idle_inhibitor, #custom-dnd, #custom-wg, #custom-tailscale, #bluetooth, #network, #wireplumber,
-#backlight, #power-profiles-daemon, #custom-display, #battery, #custom-power, #clock,
-#custom-hw-icon, #cpu, #memory, #mpris {
-  border-radius: 999px;
+/* hover: round background behind each item — circles for icons, pills for text */
+#idle_inhibitor, #custom-dnd, #custom-wg, #custom-tailscale, #bluetooth, #network,
+#backlight, #power-profiles-daemon, #custom-display, #custom-power, #custom-hw-icon {
+  min-width: 26px;
+  min-height: 26px;
+  padding: 0;
   margin: 3px 1px;
+  border-radius: 50%;
   transition: background 0.2s ease;
 }
-#clock { margin: 2px 3px; }
+#wireplumber, #battery, #cpu, #memory, #temperature, #mpris, #bluetooth.connected {
+  min-height: 26px;
+  padding: 0 9px;
+  margin: 3px 1px;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+#custom-power { margin-right: 2px; }
+
 #idle_inhibitor:hover, #custom-dnd:hover, #custom-wg:hover, #custom-tailscale:hover, #bluetooth:hover,
 #network:hover, #wireplumber:hover, #backlight:hover, #power-profiles-daemon:hover, #custom-display:hover,
-#battery:hover, #clock:hover, #custom-hw-icon:hover, #cpu:hover, #memory:hover, #mpris:hover {
-  background: rgba(23, 147, 209, 0.55);
+#battery:hover, #custom-hw-icon:hover, #cpu:hover, #memory:hover, #mpris:hover {
+  background: #1793d1;
   color: #ffffff;
 }
+#clock:hover        { background: #1793d1; }
 #custom-power:hover { background: #f7768e; color: #ffffff; }
 
 @keyframes pulse {
