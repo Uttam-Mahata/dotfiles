@@ -15,7 +15,13 @@ refresh()    { pkill -RTMIN+13 -x waybar 2>/dev/null || true; }
 note()       { notify-send -a WireGuard -t 2500 "󰖂  WireGuard" "$1"; }
 
 connect() {
-    if systemctl start "$UNIT"; then note "$IF connected"; else note "Could not connect $IF"; fi
+    if systemctl start "$UNIT"; then
+        note "$IF connected"
+    else
+        # show why: the last lines wg-quick wrote to the journal
+        why=$(journalctl -u "$UNIT" -n 4 -o cat --no-pager 2>/dev/null | grep -v '^\[#\]' | tail -3)
+        notify-send -u critical -a WireGuard "󰖂  Could not connect $IF" "${why:-Authentication cancelled, or /etc/wireguard/$IF.conf is missing}"
+    fi
     refresh
 }
 disconnect() {
