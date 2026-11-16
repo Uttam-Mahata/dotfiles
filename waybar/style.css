@@ -18,7 +18,7 @@ tooltip { background: rgba(26, 27, 38, 0.95); color: #ffffff; border: 1px solid 
 tooltip label { color: #ffffff; font-weight: 500; }
 
 /* ---------- islands: dark frosted pills (Hyprland blurs behind them) so icons read on any wallpaper ---------- */
-#launch, #window, #clock, #hw, #sys, #mpris, #tray {
+#launch, #window, #sys, #mpris, #tray {
   background: rgba(26, 27, 38, 0.55);
   border-radius: 999px;
   margin: 1px 3px;
@@ -26,7 +26,6 @@ tooltip label { color: #ffffff; font-weight: 500; }
 }
 #launch { padding-left: 10px; }
 #sys    { padding: 0 4px; }
-#clock  { padding: 0 14px; }
 window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
 #mpris.stopped, #tray.empty { background: transparent; padding: 0; margin: 0; }
 
@@ -110,7 +109,7 @@ window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
   border-radius: 50%;
   transition: background 0.2s ease;
 }
-#wireplumber, #battery, #cpu, #memory, #temperature, #mpris, #bluetooth.connected {
+#clock, #wireplumber, #battery, #mpris, #bluetooth.connected {
   min-height: 24px;
   padding: 0 9px;
   margin: 2px 1px;

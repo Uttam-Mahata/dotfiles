@@ -10,7 +10,7 @@
 
   "modules-left":   ["group/launch"],
   "modules-center": ["hyprland/window"],
-  "modules-right":  ["custom/recording", "mpris", "tray", "clock", "group/sys"],
+  "modules-right":  ["custom/recording", "mpris", "tray", "group/sys"],
 
   "group/launch": {
     "orientation": "horizontal",
@@ -20,7 +20,7 @@
   "group/sys": {
     "orientation": "horizontal",
     "modules": [
-      "custom/wg", "custom/tailscale", "bluetooth", "network",
+      "clock", "custom/wg", "custom/tailscale", "bluetooth", "network",
       "wireplumber", "custom/display", "battery", "custom/power"
     ]
   },
