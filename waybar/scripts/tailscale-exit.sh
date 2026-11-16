@@ -41,7 +41,7 @@ ts_set() {
       out="Permission was not granted (polkit prompt cancelled or failed)."
     fi
   fi
-  notify-send -u critical -a Tailscale "Exit node" "$out" 2>/dev/null
+  notify-send -u normal -t 8000 -a Tailscale "Exit node" "$out" 2>/dev/null
   return 1
 }
 
@@ -56,13 +56,13 @@ except Exception: print("")')
     "")
       if ! systemctl is-active --quiet tailscaled; then
         notify-send -a Tailscale "Tailscale" "Starting the tailscaled service…" 2>/dev/null
-        systemctl start tailscaled || { notify-send -u critical -a Tailscale "Tailscale" "Could not start tailscaled"; return 1; }
+        systemctl start tailscaled || { notify-send -u normal -t 8000 -a Tailscale "Tailscale" "Could not start tailscaled"; return 1; }
         sleep 2
       fi ;;
     NeedsLogin)
-      notify-send -u critical -a Tailscale "Tailscale" "Not logged in — run: tailscale up" 2>/dev/null; return 1 ;;
+      notify-send -u normal -t 8000 -a Tailscale "Tailscale" "Not logged in — run: tailscale up" 2>/dev/null; return 1 ;;
     Stopped)
-      ts_up=$(tailscale up 2>&1) || { notify-send -u critical -a Tailscale "Tailscale" "$ts_up"; return 1; } ;;
+      ts_up=$(tailscale up 2>&1) || { notify-send -u normal -t 8000 -a Tailscale "Tailscale" "$ts_up"; return 1; } ;;
   esac
 }
 

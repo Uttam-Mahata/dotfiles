@@ -20,7 +20,7 @@ connect() {
     else
         # show why: the last lines wg-quick wrote to the journal
         why=$(journalctl -u "$UNIT" -n 4 -o cat --no-pager 2>/dev/null | grep -v '^\[#\]' | tail -3)
-        notify-send -u critical -a WireGuard "󰖂  Could not connect $IF" "${why:-Authentication cancelled, or /etc/wireguard/$IF.conf is missing}"
+        notify-send -u normal -t 8000 -a WireGuard "󰖂  Could not connect $IF" "${why:-Authentication cancelled, or /etc/wireguard/$IF.conf is missing}"
     fi
     refresh
 }
