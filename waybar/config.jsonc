@@ -1,62 +1,128 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 30,
+  "height": 32,
   "spacing": 0,
   "margin-top": 3,
   "margin-left": 14,
   "margin-right": 14,
   "reload_style_on_change": true,
 
-  "modules-left": ["group/launch"],
-  "modules-center": ["hyprland/window"],
-  "modules-right": ["group/sys"],
+  "modules-left":   ["group/launch", "hyprland/window"],
+  "modules-center": ["clock"],
+  "modules-right":  ["custom/recording", "mpris", "tray", "group/hw", "group/sys"],
 
   "group/launch": {
     "orientation": "horizontal",
     "modules": ["custom/arch", "hyprland/workspaces"]
   },
 
+  // CPU / memory / temperature tucked into a drawer: hover the chip icon to expand
+  "group/hw": {
+    "orientation": "horizontal",
+    "drawer": { "transition-duration": 300, "children-class": "hw-child", "transition-left-to-right": false },
+    "modules": ["custom/hw-icon", "cpu", "memory", "temperature"]
+  },
+
   "group/sys": {
     "orientation": "horizontal",
-    "modules": ["clock", "custom/wg", "custom/tailscale", "bluetooth", "network", "custom/display", "battery", "custom/power"]
+    "modules": [
+      "idle_inhibitor", "custom/dnd", "custom/wg", "custom/tailscale", "bluetooth", "network",
+      "wireplumber", "backlight", "power-profiles-daemon", "custom/display", "battery", "custom/power"
+    ]
   },
 
   "custom/arch": {
     "format": "󰣇",
     "tooltip": false,
-    "on-click": "wofi --show drun"
+    "on-click": "wofi --show drun",
+    "on-click-right": "~/.local/bin/keybinds"
   },
 
   "hyprland/workspaces": {
     "format": "{id}",
     "all-outputs": false,
     "on-click": "activate",
-    "on-scroll-up": "hyprctl dispatch workspace e-1",
-    "on-scroll-down": "hyprctl dispatch workspace e+1"
+    "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
+    "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'"
   },
 
   "hyprland/window": {
-    "format": "{title}",
+    "format": "{class}",
     "icon": true,
-    "icon-size": 18,
-    "max-length": 48,
+    "icon-size": 16,
+    "max-length": 32,
     "separate-outputs": true,
-    "rewrite": { "^\\s*$": "" }
+    "tooltip": true,
+    "rewrite": {
+      "^\\s*$": "",
+      "^firefox$": "Firefox",
+      "^kitty$": "Terminal",
+      "^dropterm$": "Terminal",
+      "^org\\.pulseaudio\\.pavucontrol$": "Volume"
+    }
   },
 
   "clock": {
-    "format": "{0:%I:%M %p}",
+    "format": "{:%a %d %b  %I:%M %p}",
     "tooltip-format": "<tt>{calendar}</tt>",
     "calendar": {
       "mode": "month",
+      "on-scroll": 1,
       "format": {
-        "months": "<span color='#ffffff'><b>{}</b></span>",
+        "months":   "<span color='#ffffff'><b>{}</b></span>",
         "weekdays": "<span color='#8c96a0'><b>{}</b></span>",
-        "days": "<span color='#ffffff'>{}</span>",
-        "today": "<span color='#1793d1'><b><u>[{}]</u></b></span>"
+        "days":     "<span color='#ffffff'>{}</span>",
+        "today":    "<span color='#1793d1'><b><u>[{}]</u></b></span>"
       }
-    }
+    },
+    "actions": { "on-scroll-up": "shift_down", "on-scroll-down": "shift_up", "on-click-right": "mode" }
+  },
+
+  "custom/recording": {
+    "exec": "~/.config/waybar/scripts/recording.sh",
+    "return-type": "json",
+    "interval": "once",
+    "signal": 12,
+    "on-click": "~/.local/bin/screenrec"
+  },
+
+  "mpris": {
+    "format": "{status_icon} {title}",
+    "format-stopped": "",
+    "title-len": 24,
+    "status-icons": { "playing": "󰏤", "paused": "󰐊" },
+    "tooltip-format": "{player}: {artist} — {title}\nClick: play/pause · Scroll: next/previous",
+    "on-scroll-up": "playerctl previous",
+    "on-scroll-down": "playerctl next"
+  },
+
+  "tray": { "icon-size": 16, "spacing": 8 },
+
+  "custom/hw-icon": { "format": "󰍛", "tooltip-format": "Hover for CPU, memory and temperature" },
+  "cpu":         { "format": "󰻠 {usage}%", "interval": 5, "on-click": "kitty -e htop" },
+  "memory":      { "format": "󰘚 {percentage}%", "interval": 10, "tooltip-format": "{used:0.1f} / {total:0.1f} GiB used" },
+  "temperature": {
+    "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
+    "input-filename": "temp1_input",
+    "critical-threshold": 85,
+    "format": "󰔏 {temperatureC}°"
+  },
+
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": { "activated": "󰅶", "deactivated": "󰾪" },
+    "tooltip-format-activated": "Staying awake (screen won't dim or lock)",
+    "tooltip-format-deactivated": "Idle: dim 4 min · lock 5 min · screen off 6 min\nClick to stay awake"
+  },
+
+  "custom/dnd": {
+    "exec": "~/.config/waybar/scripts/dnd.sh",
+    "return-type": "json",
+    "interval": 30,
+    "signal": 11,
+    "on-click": "~/.config/waybar/scripts/dnd.sh toggle",
+    "on-click-right": "dunstctl history-pop"
   },
 
   "custom/wg": {
@@ -85,7 +151,8 @@
     "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
     "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
     "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",
-    "on-click": "~/.config/waybar/scripts/bluetooth-menu.sh"
+    "on-click": "~/.config/waybar/scripts/bluetooth-menu.sh",
+    "on-click-right": "blueman-manager"
   },
 
   "network": {
@@ -93,10 +160,43 @@
     "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
     "format-ethernet": "󰈀",
     "format-disconnected": "󰤭",
-    "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}",
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}\n {bandwidthDownBytes}   {bandwidthUpBytes}",
     "tooltip-format-ethernet": "{ifname}: {ipaddr}",
     "tooltip-format-disconnected": "Disconnected",
-    "on-click": "~/.config/waybar/scripts/wifi-menu.sh"
+    "interval": 5,
+    "on-click": "~/.config/waybar/scripts/wifi-menu.sh",
+    "on-click-right": "nm-connection-editor"
+  },
+
+  "wireplumber": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟",
+    "format-icons": ["󰕿", "󰖀", "󰕾"],
+    "scroll-step": 5,
+    "max-volume": 100,
+    "tooltip-format": "{node_name}: {volume}%\nClick: mute · Right-click: mixer",
+    "on-click": "~/.local/bin/osd volume mute",
+    "on-click-right": "pavucontrol"
+  },
+
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon}",
+    "format-icons": ["󰃞", "󰃟", "󰃠"],
+    "tooltip-format": "Brightness {percent}%\nScroll to adjust",
+    "on-scroll-up": "~/.local/bin/osd brightness up",
+    "on-scroll-down": "~/.local/bin/osd brightness down"
+  },
+
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "tooltip-format": "Power profile: {profile}\nClick to cycle",
+    "format-icons": {
+      "default": "󰾅",
+      "performance": "󰓅",
+      "balanced": "󰾅",
+      "power-saver": "󰾆"
+    }
   },
 
   "custom/display": {
@@ -108,15 +208,9 @@
     "tooltip": true
   },
 
-  "custom/power": {
-    "format": "󰐥",
-    "tooltip-format": "Power menu",
-    "tooltip": true,
-    "on-click": "~/.config/waybar/scripts/power-menu.sh"
-  },
-
   "battery": {
     "bat": "BAT1",
+    "interval": 30,
     "states": { "warning": 25, "critical": 10 },
     "format": "{icon} {capacity}%",
     "format-charging": "{icon} {capacity}%",
@@ -127,5 +221,12 @@
       "default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
       "charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
     }
+  },
+
+  "custom/power": {
+    "format": "󰐥",
+    "tooltip-format": "Power menu (Super+X)",
+    "tooltip": true,
+    "on-click": "~/.config/waybar/scripts/power-menu.sh"
   }
 }
