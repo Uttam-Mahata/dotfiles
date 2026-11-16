@@ -10,25 +10,18 @@
 
   "modules-left":   ["group/launch", "hyprland/window"],
   "modules-center": ["clock"],
-  "modules-right":  ["custom/recording", "mpris", "tray", "group/hw", "group/sys"],
+  "modules-right":  ["custom/recording", "mpris", "tray", "group/sys"],
 
   "group/launch": {
     "orientation": "horizontal",
     "modules": ["custom/arch", "hyprland/workspaces"]
   },
 
-  // CPU / memory / temperature tucked into a drawer: hover the chip icon to expand
-  "group/hw": {
-    "orientation": "horizontal",
-    "drawer": { "transition-duration": 300, "children-class": "hw-child", "transition-left-to-right": false },
-    "modules": ["custom/hw-icon", "cpu", "memory", "temperature"]
-  },
-
   "group/sys": {
     "orientation": "horizontal",
     "modules": [
-      "idle_inhibitor", "custom/dnd", "custom/wg", "custom/tailscale", "bluetooth", "network",
-      "wireplumber", "backlight", "power-profiles-daemon", "custom/display", "battery", "custom/power"
+      "custom/wg", "custom/tailscale", "bluetooth", "network",
+      "wireplumber", "custom/display", "battery", "custom/power"
     ]
   },
 
@@ -99,32 +92,6 @@
 
   "tray": { "icon-size": 16, "spacing": 8 },
 
-  "custom/hw-icon": { "format": "󰍛", "tooltip-format": "Hover for CPU, memory and temperature" },
-  "cpu":         { "format": "󰻠 {usage}%", "interval": 5, "on-click": "kitty -e htop" },
-  "memory":      { "format": "󰘚 {percentage}%", "interval": 10, "tooltip-format": "{used:0.1f} / {total:0.1f} GiB used" },
-  "temperature": {
-    "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
-    "input-filename": "temp1_input",
-    "critical-threshold": 85,
-    "format": "󰔏 {temperatureC}°"
-  },
-
-  "idle_inhibitor": {
-    "format": "{icon}",
-    "format-icons": { "activated": "󰅶", "deactivated": "󰾪" },
-    "tooltip-format-activated": "Staying awake (screen won't dim or lock)",
-    "tooltip-format-deactivated": "Idle: dim 4 min · lock 5 min · screen off 6 min\nClick to stay awake"
-  },
-
-  "custom/dnd": {
-    "exec": "~/.config/waybar/scripts/dnd.sh",
-    "return-type": "json",
-    "interval": 30,
-    "signal": 11,
-    "on-click": "~/.config/waybar/scripts/dnd.sh toggle",
-    "on-click-right": "dunstctl history-pop"
-  },
-
   "custom/wg": {
     "exec": "~/.config/waybar/scripts/wg.sh",
     "return-type": "json",
@@ -179,26 +146,6 @@
     "tooltip-format": "{node_name}: {volume}%\nClick: mute · Right-click: mixer",
     "on-click": "~/.local/bin/osd volume mute",
     "on-click-right": "pavucontrol"
-  },
-
-  "backlight": {
-    "device": "intel_backlight",
-    "format": "{icon}",
-    "format-icons": ["󰃞", "󰃟", "󰃠"],
-    "tooltip-format": "Brightness {percent}%\nScroll to adjust",
-    "on-scroll-up": "~/.local/bin/osd brightness up",
-    "on-scroll-down": "~/.local/bin/osd brightness down"
-  },
-
-  "power-profiles-daemon": {
-    "format": "{icon}",
-    "tooltip-format": "Power profile: {profile}\nClick to cycle",
-    "format-icons": {
-      "default": "󰾅",
-      "performance": "󰓅",
-      "balanced": "󰾅",
-      "power-saver": "󰾆"
-    }
   },
 
   "custom/display": {
