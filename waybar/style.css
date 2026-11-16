@@ -19,7 +19,7 @@ tooltip label { color: #ffffff; font-weight: 500; }
 
 /* ---------- islands: dark frosted pills (Hyprland blurs behind them) so icons read on any wallpaper ---------- */
 #launch, #window, #sys, #mpris, #tray {
-  background: rgba(26, 27, 38, 0.55);
+  background: rgba(12, 13, 22, 0.55);
   border-radius: 999px;
   margin: 1px 3px;
   padding: 0 6px;

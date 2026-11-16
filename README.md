@@ -25,7 +25,7 @@ A complete, production-grade personal dotfiles ecosystem configured from scratch
 | 📟 Kitty Terminal & Waybar | 🌐 Firefox & Desktop Experience |
 |:---:|:---:|
 | <img src="assets/screenshots/kitty.png" alt="Kitty Terminal with TokyoNight Blur and Arch Cyan Accents" width="100%" /> | <img src="assets/screenshots/firefox.png" alt="Firefox Web Browser with Waybar" width="100%" /> |
-| *Kitty GPU terminal (0.85 opacity, blur, Arch cyan cursor)* | *Firefox browsing with rounded corners & translucent Waybar* |
+| *Kitty GPU terminal (0.55 opacity, blur, Arch cyan cursor)* | *Firefox browsing with rounded corners & translucent Waybar* |
 
 <br/>
 
@@ -47,7 +47,7 @@ Every desktop component is calibrated for visual coherence and legibility:
 | **Waybar** | Top bar with flat high-contrast typography (Adwaita & Noto Sans), Arch blue `#1793d1` active indicators, and blurred wallpaper backdrop (`waybar-blur` layer rule). |
 | **Hyprlock** | Frosted glass lockscreen with 3 blur passes, 7 blur size, live clock & date, `$USER@archlinux` banner, and Arch gradient input box. |
 | **SDDM Login** | Custom **Arch Slate** QtQuick 6 greeter with matching Fuji night backdrop, live clock/date, Arch logo, and smooth authentication feedback. |
-| **Kitty Terminal** | GPU-accelerated terminal with `background_opacity 0.85` and `background_blur 32`, TokyoNight palette, and split navigation. |
+| **Kitty Terminal** | GPU-accelerated terminal with `background_opacity 0.55` and `background_blur 32`, TokyoNight palette, and split navigation. |
 | **Dunst** | Rounded translucent TokyoNight notifications with Arch-blue frame, blurred backdrop, and progress-bar OSD for volume / brightness keys. |
 | **Wofi** | Translucent rounded Spotlight launcher (`#outer-box` `rgba(26,27,38,0.62)`) with subtle Arch blue border and compositor layer blur (`popin 92%`). |
 | **Neovim** | LazyVim with transparent TokyoNight background integration (`<leader>uT` live toggle) and blended popups (`winblend = 10`, `pumblend = 10`). |
