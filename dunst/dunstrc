@@ -1,0 +1,81 @@
+# Dunst — TokyoNight / Arch blue, rounded translucent cards (Hyprland blurs behind them)
+# Super+Shift+N: previous notification · Super+Ctrl+N: dismiss all · Super+Alt+N: do not disturb
+
+[global]
+    monitor = 0
+    follow = mouse
+    layer = overlay
+    origin = top-right
+    offset = (14, 46)
+    width = (280, 380)
+    height = (0, 220)
+    notification_limit = 5
+    gap_size = 8
+    padding = 12
+    horizontal_padding = 14
+    text_icon_padding = 12
+    frame_width = 1
+    corner_radius = 14
+    separator_height = 0
+    sort = urgency_descending
+    idle_threshold = 120
+
+    font = Adwaita Sans 11, Noto Sans 11, JetBrainsMono Nerd Font 11
+    markup = full
+    format = "<b>%s</b>\n%b"
+    alignment = left
+    vertical_alignment = center
+    ellipsize = end
+    word_wrap = yes
+    show_age_threshold = 60
+    stack_duplicates = true
+    hide_duplicate_count = false
+    show_indicators = no
+
+    icon_position = left
+    min_icon_size = 32
+    max_icon_size = 56
+    enable_recursive_icon_lookup = true
+    icon_theme = Adwaita
+
+    progress_bar = true
+    progress_bar_height = 8
+    progress_bar_frame_width = 0
+    progress_bar_min_width = 220
+    progress_bar_max_width = 360
+    progress_bar_corner_radius = 4
+
+    history_length = 30
+    browser = /usr/bin/xdg-open
+    always_run_script = true
+    mouse_left_click = do_action, close_current
+    mouse_middle_click = close_all
+    mouse_right_click = close_current
+
+[urgency_low]
+    background = "#1a1b26d9"
+    foreground = "#c0caf5"
+    frame_color = "#41486899"
+    highlight = "#1793d1"
+    timeout = 4
+
+[urgency_normal]
+    background = "#1a1b26e6"
+    foreground = "#ffffff"
+    frame_color = "#1793d1aa"
+    highlight = "#1793d1"
+    timeout = 6
+
+[urgency_critical]
+    background = "#1a1b26f2"
+    foreground = "#ffffff"
+    frame_color = "#f7768e"
+    highlight = "#f7768e"
+    timeout = 0
+
+# Volume / brightness indicator: compact, centred near the bottom
+[osd]
+    appname = osd
+    format = "<b>%s</b>"
+    timeout = 1.2
+    history_ignore = yes
