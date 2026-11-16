@@ -41,18 +41,19 @@
   },
 
   "hyprland/window": {
-    "format": "{class}",
+    // live title of the focused window (e.g. the current browser tab); the pill grows with it
+    "format": "{title}",
     "icon": true,
     "icon-size": 16,
-    "max-length": 32,
+    "max-length": 70,
     "separate-outputs": true,
     "tooltip": true,
     "rewrite": {
       "^\\s*$": "",
-      "^firefox$": "Firefox",
-      "^kitty$": "Terminal",
-      "^dropterm$": "Terminal",
-      "^org\\.pulseaudio\\.pavucontrol$": "Volume"
+      "(.*) (—|-) Mozilla Firefox( Private Browsing)?$": "$1",
+      "(.*) (—|-) (Google Chrome|Chromium|Brave)$": "$1",
+      "(.*) (—|-) Visual Studio Code$": "$1",
+      "^Mozilla Firefox$": "Firefox"
     }
   },
 
