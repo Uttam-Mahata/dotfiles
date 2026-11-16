@@ -72,6 +72,13 @@ hl.window_rule({
 })
 
 ------------------------------------------------------------------ app tweaks
+-- Kitty: no window border (its translucent blurred background is enough)
+hl.window_rule({
+    name        = "kitty-no-border",
+    match       = { class = "^(kitty|dropterm)$" },
+    border_size = 0,
+})
+
 -- Firefox: opaque when focused (readable text), lightly translucent when not
 hl.window_rule({
     name    = "firefox-opacity",
