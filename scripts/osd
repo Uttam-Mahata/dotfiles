@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# On-screen indicator for volume / mic / brightness keys (dunst progress-bar notification).
+#   osd volume up|down|mute   osd mic mute   osd brightness up|down
+notify() {  # $1 tag, $2 icon, $3 text, $4 value (0-100, optional)
+    local args=(-a osd -u low -t 1200 -h "string:x-dunst-stack-tag:$1" -h "string:synchronous:$1")
+    [ -n "${4:-}" ] && args+=(-h "int:value:$4")
+    notify-send "${args[@]}" "$2  $3"
+}
+vol()  { wpctl get-volume "$1" | awk '{printf "%d", $2*100}'; }
+muted(){ wpctl get-volume "$1" | grep -q MUTED; }
+
+case "$1:$2" in
+    volume:up)   wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ ;;
+    volume:down) wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- ;;
+    volume:mute) wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle ;;
+    mic:mute)    wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle ;;
+    brightness:up)   brightnessctl -q -e4 -n2 set 5%+ ;;
+    brightness:down) brightnessctl -q -e4 -n2 set 5%- ;;
+    *) echo "usage: osd volume up|down|mute | mic mute | brightness up|down" >&2; exit 1 ;;
+esac
+
+case "$1" in
+    volume)
+        v=$(vol @DEFAULT_AUDIO_SINK@)
+        if muted @DEFAULT_AUDIO_SINK@; then notify volume "󰝟" "Muted" 0
+        elif [ "$v" -ge 66 ]; then notify volume "󰕾" "$v%" "$v"
+        elif [ "$v" -ge 33 ]; then notify volume "󰖀" "$v%" "$v"
+        else notify volume "󰕿" "$v%" "$v"; fi ;;
+    mic)
+        if muted @DEFAULT_AUDIO_SOURCE@; then notify mic "󰍭" "Microphone muted"
+        else notify mic "󰍬" "Microphone on"; fi ;;
+    brightness)
+        b=$(brightnessctl -m | cut -d, -f4 | tr -d %)
+        notify brightness "󰃠" "$b%" "$b" ;;
+esac

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Toggle screen recording (Super+Shift+R): pick a region (Esc = whole screen); saved to ~/Videos/Recordings.
+command -v wf-recorder >/dev/null || { notify-send "wf-recorder not installed" "sudo pacman -S wf-recorder"; exit 1; }
+if pgrep -x wf-recorder >/dev/null; then
+    pkill -INT -x wf-recorder
+    notify-send -a Recorder -t 2500 "󰻃  Recording saved" "$(ls -t "$HOME"/Videos/Recordings/*.mp4 2>/dev/null | head -1)"
+    pkill -RTMIN+12 waybar
+    exit 0
+fi
+mkdir -p "$HOME/Videos/Recordings"
+f="$HOME/Videos/Recordings/$(date +%Y%m%d-%H%M%S).mp4"
+g=$(slurp 2>/dev/null)
+notify-send -a Recorder -t 1500 "󰑋  Recording started" "Super+Shift+R to stop"
+pkill -RTMIN+12 waybar
+if [ -n "$g" ]; then wf-recorder -g "$g" -f "$f"; else wf-recorder -f "$f"; fi
+pkill -RTMIN+12 waybar

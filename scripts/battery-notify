@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Low-battery warnings, started by Hyprland. Warns once at 15% and again (critical) at 7% while discharging.
+BAT=$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -1)
+[ -n "$BAT" ] || exit 0
+# single instance (Hyprland may start it again after a restart)
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/battery-notify.lock"
+flock -n 9 || exit 0
+
+warned=""
+while sleep 60; do
+    cap=$(cat "$BAT/capacity"); status=$(cat "$BAT/status")
+    if [ "$status" != Discharging ]; then warned=""; continue; fi
+    if [ "$cap" -le 7 ] && [ "$warned" != critical ]; then
+        notify-send -u critical -a Battery -h string:x-dunst-stack-tag:battery "󰂃  Battery critical: $cap%" "Plug in now — the system will run out soon."
+        warned=critical
+    elif [ "$cap" -le 15 ] && [ -z "$warned" ]; then
+        notify-send -u normal -a Battery -h string:x-dunst-stack-tag:battery "󰁻  Battery low: $cap%" "Consider plugging in the charger."
+        warned=low
+    fi
+done
