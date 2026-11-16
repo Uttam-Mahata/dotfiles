@@ -6,8 +6,7 @@ hl.config({
         gaps_in  = 5,
         gaps_out = { top = 5, right = 14, bottom = 14, left = 14 },
 
-        -- thin Arch-blue gradient on the focused window so focus is always visible
-        border_size = 2,
+        border_size = 0,   -- no window borders on any app
         col = {
             active_border   = { colors = {"rgba(1793d1ee)", "rgba(7dcfffee)"}, angle = 45 },
             inactive_border = "rgba(41486866)",
@@ -22,9 +21,11 @@ hl.config({
         rounding       = 10,
         rounding_power = 2,
 
-        -- unfocused windows fade back slightly
-        active_opacity   = 1.0,
-        inactive_opacity = 0.95,
+        -- every app is translucent like Kitty (blurred wallpaper behind); unfocused ones a bit more.
+        -- Kitty, video and fullscreen windows are kept opaque in rules.lua.
+        active_opacity     = 0.85,
+        inactive_opacity   = 0.80,
+        fullscreen_opacity = 1.0,
 
         -- soft shadow; tiled windows opt out below, so only floating windows/dialogs get one
         shadow = {

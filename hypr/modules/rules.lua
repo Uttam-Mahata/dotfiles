@@ -72,18 +72,19 @@ hl.window_rule({
 })
 
 ------------------------------------------------------------------ app tweaks
--- Kitty: no window border (its translucent blurred background is enough)
+-- Apps that must NOT be faded by the global active/inactive opacity (looks.lua):
+--  • Kitty / drop-down terminal: Kitty already makes only its background translucent (0.55),
+--    so fading the whole window would also dim the text
+--  • video players, image viewers, Picture-in-Picture: keep the picture solid
 hl.window_rule({
-    name        = "kitty-no-border",
-    match       = { class = "^(kitty|dropterm)$" },
-    border_size = 0,
+    name    = "opaque-apps",
+    match   = { class = "^(kitty|dropterm|mpv|vlc|org.videolan.VLC|imv|swayimg|org.gnome.Loupe|steam_app_.*)$" },
+    opacity = "1.0 override 1.0 override",
 })
-
--- Firefox: opaque when focused (readable text), lightly translucent when not
 hl.window_rule({
-    name    = "firefox-opacity",
-    match   = { class = "^firefox$" },
-    opacity = "1.0 0.9",
+    name    = "opaque-pip",
+    match   = { title = "^(Picture-in-Picture|Picture in picture)$" },
+    opacity = "1.0 override 1.0 override",
 })
 
 ------------------------------------------------------------------ drop-down terminal (Super + `)
