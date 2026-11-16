@@ -28,16 +28,50 @@ except Exception:
 
 refresh_bar() { pkill -RTMIN+9 -x waybar 2>/dev/null; true; }
 
-apply() {  # $1 = name/ip or "off"
+# run `tailscale set ...`; on "access denied" make this user the Tailscale operator once
+# (polkit password prompt), then retry — after that no root is needed from the bar.
+ts_set() {
   local out
-  if [ "$1" = off ]; then
-    out=$(tailscale set --exit-node= 2>&1)
-  else
-    out=$(tailscale set --exit-node="$1" --exit-node-allow-lan-access=true 2>&1)
+  out=$(tailscale set "$@" 2>&1) && return 0
+  if grep -qi 'access denied' <<<"$out"; then
+    notify-send -a Tailscale -t 4000 "Exit node" "One-time setup: allowing $USER to control Tailscale…" 2>/dev/null
+    if pkexec tailscale set --operator="$USER" >/dev/null 2>&1; then
+      out=$(tailscale set "$@" 2>&1) && return 0
+    else
+      out="Permission was not granted (polkit prompt cancelled or failed)."
+    fi
   fi
-  if [ $? -ne 0 ]; then
-    notify-send -u critical "Exit node" "$out" 2>/dev/null
-    return 1
+  notify-send -u critical -a Tailscale "Exit node" "$out" 2>/dev/null
+  return 1
+}
+
+# make sure the daemon is up and logged in before changing anything
+ensure_running() {
+  local st
+  st=$(status_json | python3 -c 'import json,sys
+try: print(json.load(sys.stdin).get("BackendState",""))
+except Exception: print("")')
+  case "$st" in
+    Running) return 0 ;;
+    "")
+      if ! systemctl is-active --quiet tailscaled; then
+        notify-send -a Tailscale "Tailscale" "Starting the tailscaled service…" 2>/dev/null
+        systemctl start tailscaled || { notify-send -u critical -a Tailscale "Tailscale" "Could not start tailscaled"; return 1; }
+        sleep 2
+      fi ;;
+    NeedsLogin)
+      notify-send -u critical -a Tailscale "Tailscale" "Not logged in — run: tailscale up" 2>/dev/null; return 1 ;;
+    Stopped)
+      ts_up=$(tailscale up 2>&1) || { notify-send -u critical -a Tailscale "Tailscale" "$ts_up"; return 1; } ;;
+  esac
+}
+
+apply() {  # $1 = name/ip or "off"
+  ensure_running || return 1
+  if [ "$1" = off ]; then
+    ts_set --exit-node= || return 1
+  else
+    ts_set --exit-node="$1" --exit-node-allow-lan-access=true || return 1
   fi
   refresh_bar
 }

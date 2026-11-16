@@ -21,7 +21,7 @@ tooltip label { color: #ffffff; font-weight: 500; }
 #launch, #window, #clock, #hw, #sys, #mpris, #tray {
   background: rgba(26, 27, 38, 0.55);
   border-radius: 999px;
-  margin: 2px 3px;
+  margin: 1px 3px;
   padding: 0 6px;
 }
 #launch { padding-left: 10px; }
@@ -31,7 +31,7 @@ window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
 #mpris.stopped, #tray.empty { background: transparent; padding: 0; margin: 0; }
 
 /* ---------- launcher + workspaces ---------- */
-#custom-arch { color: #1793d1; font-size: 17px; padding: 0 12px 0 2px; margin: 4px 0; }
+#custom-arch { color: #1793d1; font-size: 17px; padding: 0 12px 0 2px; margin: 0; }
 #custom-arch:hover { color: #ffffff; }
 
 #workspaces { padding: 0 2px; }
@@ -41,7 +41,7 @@ window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
   min-width: 24px;
   min-height: 22px;
   padding: 0 4px;
-  margin: 4px 2px;
+  margin: 3px 2px;
   border-radius: 999px;
   transition: all 0.25s ease;
 }
@@ -64,7 +64,7 @@ window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
   background: #f7768e;
   border-radius: 999px;
   padding: 0 10px;
-  margin: 4px;
+  margin: 2px 4px;
   animation: pulse 1.2s ease-in-out infinite alternate;
 }
 
@@ -95,7 +95,6 @@ window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
   color: #ffffff;
   background: #f7768e;
   border-radius: 999px;
-  margin: 4px 2px;
   animation: pulse 0.9s ease-in-out infinite alternate;
 }
 
@@ -104,17 +103,17 @@ window#waybar.empty #window { background: transparent; padding: 0; margin: 0; }
 /* hover: round background behind each item — circles for icons, pills for text */
 #idle_inhibitor, #custom-dnd, #custom-wg, #custom-tailscale, #bluetooth, #network,
 #backlight, #power-profiles-daemon, #custom-display, #custom-power, #custom-hw-icon {
-  min-width: 26px;
-  min-height: 26px;
+  min-width: 24px;
+  min-height: 24px;
   padding: 0;
-  margin: 3px 1px;
+  margin: 2px 1px;
   border-radius: 50%;
   transition: background 0.2s ease;
 }
 #wireplumber, #battery, #cpu, #memory, #temperature, #mpris, #bluetooth.connected {
-  min-height: 26px;
+  min-height: 24px;
   padding: 0 9px;
-  margin: 3px 1px;
+  margin: 2px 1px;
   border-radius: 999px;
   transition: background 0.2s ease;
 }
